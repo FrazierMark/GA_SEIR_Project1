@@ -38,7 +38,7 @@ module.exports = merge(
                 overlay: true,
                 progress: false
             },
-            setupMiddlewares: function(devServer)
+            onAfterSetupMiddleware: function(devServer)
             {
                 const port = devServer.options.port
                 const https = devServer.options.https ? 's' : ''

@@ -17,18 +17,47 @@ body {
 }
 
 #title {
-    margin-bottom: 100px;
+    margin-bottom: 50px;
     font-size: 50px;
 }
 
 .board_grid {
     display: grid;
-    grid-template-columns: repeat(7, 50px);
-    grid-gap: 20px;
+    height: 700px;
+    width: 700px;
+    grid-template-rows: repeat(7, 1fr);
+    gap: 0px;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 0px;
+    background-color: rgb(25, 88, 236);
     justify-items: center;
 
 }
 
+.cell {
+    align-items: center;
+    display: flex;
+    height: 100px;
+    width: 100px;
+    justify-content: center;
+    
+  }
+
+  .cell::after {
+    background: transparent;
+    border: 10px bold;
+    border-radius: 50%;
+    border: 3px solid black;
+    content: '';
+    cursor: pointer;
+    height: 75px;
+    width: 75px;
+  }
+
+
 .footer {
-    margin-top: 100px;
+    margin-top: 50px;
 }
+
+
+/* border-radius: 0 0 0 10px; */
