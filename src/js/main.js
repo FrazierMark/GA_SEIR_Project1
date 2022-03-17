@@ -8,11 +8,7 @@ import * as dat from 'lil-gui'
 
 
 
-
-/**
- * Base
- */
-// Debug
+// Debugging UI
 const gui = new dat.GUI()
 
 // Canvas
@@ -36,7 +32,7 @@ const cube = new THREE.Mesh(
     new THREE.BoxGeometry(1, 1, 1),
     new THREE.MeshBasicMaterial()
 )
-// scene.add(cube)
+scene.add(cube)
 
 /**
     Particles
