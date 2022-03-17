@@ -1,7 +1,7 @@
 # Connect 4
 GA - SERI - Project 1
  
-This is a vanilla javascript recreation of the classic board game, "Connect 4"!
+This is a vanilla javascript recreation of the classic game, "Connect 4"!
 
 The is a two-player game in which players (yellow and red) take turns
 dropping tokens into a 6-row, 7-column grid.
