@@ -4,11 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
 
-
-
-
-
-// Debugging UI
+// Debugging GUI
 const gui = new dat.GUI()
 
 // Canvas
@@ -16,8 +12,6 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
-
-
 
 /**
  * Textures
@@ -32,7 +26,7 @@ const cube = new THREE.Mesh(
     new THREE.BoxGeometry(1, 1, 1),
     new THREE.MeshBasicMaterial()
 )
-scene.add(cube)
+//scene.add(cube)
 
 /**
     Particles
@@ -87,34 +81,31 @@ const particles = new THREE.Points(particlesGeometry, particlesMaterial)
 scene.add(particles)
 
 
-/**
- * Sizes
- */
-const sizes = {
+// Aspect Window ratio
+const windowSize = {
     width: window.innerWidth,
     height: window.innerHeight
 }
 
-window.addEventListener('resize', () =>
-{
-    // Update sizes
-    sizes.width = window.innerWidth
-    sizes.height = window.innerHeight
+// Allow window and scene objects to resize on window adjustment
+window.addEventListener('resize', () => {
+    // Update windowSize
+    windowSize.width = window.innerWidth
+    windowSize.height = window.innerHeight
 
-    // Update camera
-    camera.aspect = sizes.width / sizes.height
+    // Update camera aspect-ratio based on window size
+    camera.aspect = windowSize.width / windowSize.height
     camera.updateProjectionMatrix()
 
     // Update renderer
-    renderer.setSize(sizes.width, sizes.height)
+    renderer.setSize(windowSize.width, windowSize.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-/**
- * Camera
- */
-// Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+//Camera
+const camera = new THREE.PerspectiveCamera(75, windowSize.width / windowSize.height, 0.1, 100)
+camera.position.x = 3
+camera.position.y = 3
 camera.position.z = 3
 scene.add(camera)
 
@@ -128,7 +119,7 @@ controls.enableDamping = true
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
-renderer.setSize(sizes.width, sizes.height)
+renderer.setSize(windowSize.width, windowSize.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 /**
