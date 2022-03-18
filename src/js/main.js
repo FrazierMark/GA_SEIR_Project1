@@ -23,12 +23,13 @@ const player1_TurnToken = document.querySelector(".player1_token")
 const player2_TurnToken = document.querySelector(".player2_token")
 
 //fyi, returns node list <<---
-const cells = document.querySelectorAll("cell")
+const cells = document.querySelectorAll("row1")
+const startResetBtn = document.querySelector(".start_reset")
+const winLoseDrawMsg = document.querySelector('.win_lose_draw')
 
-const startGame = document.querySelector(".start_reset")
 
-
-
+const column1 = document.querySelectorAll(".column1, .column2")
+console.log(column1)
 
 
 
