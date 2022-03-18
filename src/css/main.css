@@ -6,6 +6,12 @@
     outline: none;
     z-index: -1;
 }
+
+@font-face{
+    font-family: "abnes";
+    src: url("../../public/fonts/abnes.ttf")
+}
+
 body {
     height: 100vh;
     margin: 0;
@@ -13,10 +19,10 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: white;
 }
 
 #title {
+    font-family: 'abnes';
     margin-bottom: 50px;
     font-size: 50px;
 }
@@ -25,37 +31,53 @@ body {
     display: grid;
     height: 650px;
     width: 650px;
-    grid-template-rows: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
     grid-template-columns: repeat(7, 1fr);
     grid-gap: 0px;
+    box-shadow: 0 0 0 500px #0000;
+    border: solid 1px #00cccc;
     align-items: center;
-    background-color: rgb(25, 88, 236);
     justify-items: center;
-
 }
 
 .cell {
+    overflow: hidden;
     align-items: center;
     display: flex;
+    border:solid 1px #00cccc;
+    border-radius:50%;
     height: 70px;
     width: 70px;
     justify-content: center;
-    background: transparent;
+    text-align:justify;
+    cursor:cell;
   }
 
-  .cell::after {
-    background: transparent;
-    border-radius: 50%;
-    border: 3px solid black;
-    content: '';
-    cursor: pointer;
-    height: 70px;
-    width: 70px;
-  }
+  .fixed-holder {
+    overflow:hidden;
+    width:100px;
+    height:100px;
+    margin:0;
+    padding:0;
+    border:0;
+    float:left;
+}
+
+.clearfix:after {
+    content:"";
+    clear: both;
+}
 
 
 .footer {
     margin-top: 50px;
+}
+
+.start_reset {
+    font-family: 'abnes';
+    padding: 15px;
+    border-radius: 50%;
+    cursor:cell;
 }
 
 

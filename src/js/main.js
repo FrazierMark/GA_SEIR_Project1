@@ -13,6 +13,15 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+const parameteres = {}
+
+//
+const generateParticleFormation = () => {
+
+}
+generateParticleFormation()
+
+
 /**
  * Textures
  */
@@ -48,7 +57,7 @@ for (let i = 0; i < count * 3; i++) { // Multiply by 3 cause, x, y, z
     colors[i] = Math.random()
 }
 
-// Create the Three.js BufferAttribute and specify that each information is composed of 3 values
+// Create the Three.js BufferAttribute and specify that each peice of information is composed of 3 values
 particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3)) 
 
 particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
@@ -136,7 +145,8 @@ const tick = () =>
 
     //Update particles
     // particles.rotation.y = elapsedTime * 0.2
-    for(let i = 0; i < count; i++) {
+    // Wave-like movement of particles
+    for (let i = 0; i < count; i++) {
         const i3 = i * 3
 
         const x = particlesGeometry.attributes.position.array[i3]

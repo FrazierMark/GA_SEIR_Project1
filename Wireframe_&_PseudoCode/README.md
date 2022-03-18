@@ -46,8 +46,8 @@ JAVASCRIPT
 2. Variables
     -Variables within constant 2D array will be updated
     - Player's turn variable
-        Player1_turn = true
-        Player2_turn = false
+        - Player1_turn = true
+        - Player2_turn = false
     - Win/Lose variable
     - Keep track/cache values as the players fill grid?
 
