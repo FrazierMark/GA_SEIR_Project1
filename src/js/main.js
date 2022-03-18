@@ -18,14 +18,28 @@ import * as dat from 'lil-gui'
 
 
 
-/*----- DOM elements -----*/
+/*----- DOM Elements -----*/
 const player1_TurnToken = document.querySelector(".player1_token")
 const player2_TurnToken = document.querySelector(".player2_token")
 
+//fyi, returns node list <<---
 const cells = document.querySelectorAll("cell")
-console.log(cells)
+
+const startGame = document.querySelector(".start_reset")
 
 
+
+
+
+
+/*-----Event Listeners-----*/
+
+
+
+
+
+
+// if Start button clicked change innerHTML to reset
 
 
 
@@ -35,12 +49,6 @@ console.log(cells)
 /**
  * WebGL / ThreeJS - background
  */
-
-
-
-
-
-
 
 
 

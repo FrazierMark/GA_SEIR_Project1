@@ -88,7 +88,7 @@ body {
     width: 70px;
     margin-top: 50px;
     cursor:cell;
-    background: linear-gradient(360deg, transparent, #ff0000 90%);
+    background: linear-gradient(360deg, transparent, #ff0000 95%);
 
   }
   .player2_token{
@@ -105,7 +105,6 @@ body {
   }
   
 
-
 .footer {
     grid-row: 3;
     grid-column: 2;
@@ -118,9 +117,7 @@ body {
     border-radius: 5%;
     cursor:cell;
     color: #f2f8f4;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    text-decoration: none;
+    letter-spacing: 10px;
     font-size: 24px;
     overflow: hidden;
     transition: 0.2s;
@@ -145,3 +142,18 @@ body {
         0 0 151px #0fa;
   }
   
+  .win_lose_draw {
+    font-family: 'abnes';
+    font-size: 50px;
+    letter-spacing: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    color: white;
+    position: absolute;
+    border-radius: 0%;
+    text-align: center;
+    left: 50%px;
+    top: 40%;
+    background: linear-gradient(360deg, transparent, #67ccae);
+    box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 .4em #0fa;
+  }
