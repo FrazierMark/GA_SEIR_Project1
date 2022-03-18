@@ -25,18 +25,16 @@ body {
     justify-content: center;
     align-content: center;
     align-items: flex-start;
-    justify-items: center
-    
-
+    justify-items: center;
 }
 
-#title {
+
+.title {
     grid-row: 1;
     grid-column: 2;
     font-family: 'abnes';
     margin-bottom: 50px;
     font-size: 50px;
-    color: white;
 }
 
 .board_grid {
@@ -47,7 +45,6 @@ body {
     grid-template-rows: repeat(6, 1fr);
     grid-template-columns: repeat(7, 1fr);
     grid-gap: 0px;
-    box-shadow: 0 0 0 500px #0000;
     border: solid 1px #00cccc;
     align-items: center;
     justify-items: center;
@@ -57,7 +54,7 @@ body {
     overflow: hidden;
     align-items: center;
     display: flex;
-    border:solid 1px #00cccc;
+    box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 .4em #0fa;
     border-radius:50%;
     height: 70px;
     width: 70px;
@@ -74,12 +71,33 @@ body {
     color: white;
   }
   .player_2 {
-    padding: 20px;
-    margin: 20px;
+    padding: 10px;
+    margin: 10px;
     font-family: 'abnes';
     grid-row: 2;
     grid-column: 3;
     color: white;
+  }
+  .player1_token{
+    grid-row: 2;
+    grid-column: 1;
+    border:solid 1px #00cccc;
+    border-radius:50%;
+    height: 70px;
+    width: 70px;
+    margin-top: 50px;
+    cursor:cell;
+
+  }
+  .player2_token{
+    grid-row: 2;
+    grid-column: 3;
+    border:solid 1px #00cccc;
+    border-radius:50%;
+    height: 70px;
+    width: 70px;
+    margin-top: 50px;
+    cursor:cell;
   }
 
 
@@ -99,3 +117,17 @@ body {
 .rounded {
     border-radius: 7px 7px 7px 7px;
 }
+
+.neonText {
+    color: #fff;
+    text-shadow:
+        0 0 7px #fff,
+        0 0 10px #fff,
+        0 0 21px #fff,
+        0 0 42px #0fa,
+        0 0 82px #0fa,
+        0 0 92px #0fa,
+        0 0 102px #0fa,
+        0 0 151px #0fa;
+  }
+  
