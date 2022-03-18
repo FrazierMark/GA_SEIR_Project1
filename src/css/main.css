@@ -62,6 +62,7 @@ body {
     text-align:justify;
     cursor:cell;
   }
+
   .player_1 {
     padding: 10px;
     margin: 10px;
@@ -70,6 +71,7 @@ body {
     grid-column: 1;
     color: white;
   }
+
   .player_2 {
     padding: 10px;
     margin: 10px;
@@ -112,6 +114,15 @@ body {
     padding: 15px;
     border-radius: 5%;
     cursor:cell;
+    color: #f2f8f4;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-decoration: none;
+    font-size: 24px;
+    overflow: hidden;
+    transition: 0.2s;
+    background: linear-gradient(360deg, transparent, #67ccae);
+    box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 .4em #0fa;
 }
 
 .rounded {
