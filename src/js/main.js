@@ -4,6 +4,46 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
 
+
+/*----- Constants -----*/
+
+
+
+
+
+
+
+
+
+
+
+
+/*----- DOM elements -----*/
+const player1_TurnToken = document.querySelector(".player1_token")
+const player2_TurnToken = document.querySelector(".player2_token")
+
+const cells = document.querySelectorAll("cell")
+console.log(cells)
+
+
+
+
+
+
+
+
+/**
+ * WebGL / ThreeJS - background
+ */
+
+
+
+
+
+
+
+
+
 // // Debugging GUI
 // const gui = new dat.GUI()
 
