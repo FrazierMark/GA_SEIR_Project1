@@ -25,6 +25,7 @@ body {
     font-family: 'abnes';
     margin-bottom: 50px;
     font-size: 50px;
+    color: white;
 }
 
 .board_grid {
@@ -53,21 +54,6 @@ body {
     cursor:cell;
   }
 
-  .fixed-holder {
-    overflow:hidden;
-    width:100px;
-    height:100px;
-    margin:0;
-    padding:0;
-    border:0;
-    float:left;
-}
-
-.clearfix:after {
-    content:"";
-    clear: both;
-}
-
 
 .footer {
     margin-top: 50px;
@@ -76,9 +62,10 @@ body {
 .start_reset {
     font-family: 'abnes';
     padding: 15px;
-    border-radius: 50%;
+    border-radius: 5%;
     cursor:cell;
 }
 
-
-/* border-radius: 0 0 0 10px; */
+.rounded {
+    border-radius: 7px 7px 7px 7px;
+}
