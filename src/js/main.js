@@ -30,6 +30,9 @@ console.log(column1)
 /*----- Constants -----*/
 const gameBoard = []
 
+let player1_Turn = true
+let player2_Turn = false
+
         //default -1
         // - 1 = null
         // 0 = red
@@ -53,11 +56,7 @@ for (const column of allColumns) {
     }
   }
 
-
-
 // if Start button clicked change innerHTML to reset
-
-
 
 
 // Set initial state variables - const
@@ -66,7 +65,7 @@ function init() {
 
     // initialize 2D matrix of (-1)s
     for (let i = 0; i < 6; i++) {
-        gameBoard.push(new Array(7).fill(`row?${i}`))
+        gameBoard.push(new Array(7).fill(-1))
     }
 
    // call render() at end of init AND dropToken
@@ -81,17 +80,24 @@ function dropToken(e) {
     const cellIdx = getCellIdx(e)
     const columnIdxClicked = cellIdx[1]
      
-    console.log(columnInfo[0])
 
     
     // getAvailableSlot(columnClicked)
         // iterate through gameBoard and check space
         // by checking gameBoard array (any non -1s)
     
+    // if -1 is returned we are ready to play token...
+    // we need to return the index in order to update the gameBoard...
+
+    //we now have the index of the gameBoardd where we do work...
+    console.log(getAvailableSlot(columnIdxClicked))
     
+    
+
     // get that lowest available cell
 
     // check which player's turn
+    checkPlayerTurn()
 
     // update gameBoard array to 1 or 0 (red or yellow)
 
@@ -99,8 +105,9 @@ function dropToken(e) {
 
 
 
+    // nextPlayer()
 
-    // call render function to update DOM/Cell color
+    // call render function to update DOM/Cell color and Player Turn COLOR
 
 
 
@@ -110,9 +117,14 @@ function dropToken(e) {
 // check if avaialable space in column
 function getAvailableSlot(columnIdxClicked) {
     // get columnInfo from 
-    // check lowest column
 
-    // we can start at gameBoard[columnIdxClicked][i] and iterate through i
+    for (let i = 5; i > -1; i--){
+        if (gameBoard[i][columnIdxClicked] == -1) {
+            return [i, columnIdxClicked]
+        } else {
+            return // does nothing
+        }
+    } 
 }
 
 
@@ -128,7 +140,23 @@ const getCellIdx = (cell) => {
   };
 
 
+function checkPlayerTurn() {
+    if (player1_Turn == true) {
+        return 0
+    } else {
+        return 1
+    }
+}
 
+function updateTurn() {
+    if (player1_Turn == true) {
+        player1_Turn == false;
+        player2_Turn == true;
+    } else {
+        player1_Turn == false;
+        player2_Turn == true;
+    }
+}
 
 // div.classList.remove("red");
 // div.classList.add("yellow");
