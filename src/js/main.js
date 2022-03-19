@@ -4,45 +4,104 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
 
-
-/*----- Constants -----*/
-
-
-
-
-
-
-
-
-
-
-
-
 /*----- DOM Elements -----*/
 const player1_TurnToken = document.querySelector(".player1_token")
 const player2_TurnToken = document.querySelector(".player2_token")
 
 //fyi, returns node list <<---
-const cells = document.querySelectorAll("row1")
+const cells = document.querySelectorAll(".cell")
+console.log(cells)
 const startResetBtn = document.querySelector(".start_reset")
 const winLoseDrawMsg = document.querySelector('.win_lose_draw')
 
 
-const column1 = document.querySelectorAll(".column1, .column2")
-console.log(column1)
+
+// next step!! iterate through cells from html
+// put them in a columns
+// because if clicked we drop a token
+
+
+
+
+// for(let i <)
+// const column1 = document.querySelectorAll(".column1").addEventListener('click', dropToken)
+// const column2 = document.querySelectorAll(".column2")
+// const column3 = document.querySelectorAll(".column3")
+// const column4 = document.querySelectorAll(".column4")
+// const column5 = document.querySelectorAll(".column5")
+// const column6 = document.querySelectorAll(".column6")
+// const column7 = document.querySelectorAll(".column7")
+
+/*----- Constants -----*/
+const gameBoard = []
+
+        // - 1 = null
+        // 0 = red
+        // 1 = yellow
+// [
+//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[0]
+//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[1]
+//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[3]
+//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[4]
+//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[5]
+//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[6]
+// ]
+
 
 
 
 /*-----Event Listeners-----*/
+startResetBtn.addEventListener('click', init());
 
-
-
-
+// column1.addEventListener('click', dropToken())
+// column2.addEventListener('click', dropToken())
+// column3.addEventListener('click', dropToken())
+// column4.addEventListener('click', dropToken())
+// column5.addEventListener('click', dropToken())
+// column6.addEventListener('click', dropToken())
+// column7.addEventListener('click', dropToken())
 
 
 // if Start button clicked change innerHTML to reset
 
 
+
+
+// Set initial state variables - const
+function init() { 
+    console.log('Init function operating')
+
+    // initialize 2D matrix of (-1)s
+    for (let i = 0; i < 6; i++) {
+        gameBoard.push(new Array(7).fill(`row?${i}`))
+    }
+    
+
+
+
+   // render()
+}
+
+
+
+
+
+// //anything visually seen
+// function render() {
+
+
+
+
+//     //checkWinner()
+// }
+
+
+function dropToken() {
+    // check if right player?
+    // 
+    // 
+console.log()
+}
 
 
 

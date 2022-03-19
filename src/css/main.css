@@ -39,12 +39,12 @@ body {
 .board_grid {
     grid-row-start: 2;
     display: grid;
-    height: 650px;
-    width: 650px;
+    height: 550px;
+    width: 630px;
     grid-template-rows: repeat(6, 1fr);
     grid-template-columns: repeat(7, 1fr);
-    grid-gap: 0px;
     border: solid 1px #00cccc;
+    box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 .4em #0fa;
     align-items: center;
     justify-items: center;
 }
@@ -100,7 +100,6 @@ body {
     width: 70px;
     margin-top: 50px;
     cursor:cell;
-    background: linear-gradient(360deg, transparent, #ffd900 85%);
     box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 .4em #0fa;
 
   }
@@ -155,4 +154,12 @@ body {
     background: linear-gradient(360deg, transparent, #67ccae);
     box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 .4em #0fa;
     display: none;
+  }
+
+  .yellow {
+    background: linear-gradient(360deg, transparent, #ffd900 85%);
+  }
+
+  .red {
+    background: linear-gradient(360deg, transparent, #ff0000 95%);
   }
