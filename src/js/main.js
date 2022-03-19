@@ -30,6 +30,7 @@ console.log(column1)
 /*----- Constants -----*/
 const gameBoard = []
 
+        //default -1
         // - 1 = null
         // 0 = red
         // 1 = yellow
@@ -41,8 +42,6 @@ const gameBoard = []
 //     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[5]
 //     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[6]
 // ]
-
-
 
 
 /*-----Event Listeners-----*/
@@ -69,34 +68,51 @@ function init() {
     for (let i = 0; i < 6; i++) {
         gameBoard.push(new Array(7).fill(`row?${i}`))
     }
-    
 
-
-
-   // render()
+   // call render() at end of init AND dropToken
 }
 
 
-// //anything visually seen
-// function render() {
-
-
-//     //checkWinner()
-// }
-
-
+//aka handleClick
 function dropToken(e) {
     console.log(e.target) // e.target is <div class="cell row6 column1">1</div>
     
+    //getting column/row info
+    const cellIdx = getCellIdx(e)
+    const columnIdxClicked = cellIdx[1]
+     
+    console.log(columnInfo[0])
+
+    
+    // getAvailableSlot(columnClicked)
+        // iterate through gameBoard and check space
+        // by checking gameBoard array (any non -1s)
+    
+    
+    // get that lowest available cell
+
+    // check which player's turn
+
+    // update gameBoard array to 1 or 0 (red or yellow)
+
+    // checkWinner()
 
 
-    console.log(getCellIdx(e))
-   
+
+
+    // call render function to update DOM/Cell color
+
+
+
 
 }
 
-function getAvailableSlot() {
+// check if avaialable space in column
+function getAvailableSlot(columnIdxClicked) {
+    // get columnInfo from 
+    // check lowest column
 
+    // we can start at gameBoard[columnIdxClicked][i] and iterate through i
 }
 
 
