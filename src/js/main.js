@@ -14,22 +14,22 @@ const startResetBtn = document.querySelector(".start_reset")
 const winLoseDrawMsg = document.querySelector('.win_lose_draw')
 
 
+const column0 = document.getElementsByClassName('column0')
 const column1 = document.getElementsByClassName('column1')
 const column2 = document.getElementsByClassName('column2')
 const column3 = document.getElementsByClassName('column3')
 const column4 = document.getElementsByClassName('column4')
 const column5 = document.getElementsByClassName('column5')
 const column6 = document.getElementsByClassName('column6')
-const column7 = document.getElementsByClassName('column7')
 
 
-const allColumns = [column1, column2, column3, column4, column5, column6, column7]
+const allColumns = [column0, column1, column2, column3, column4, column5, column6]
 
 
 
 /*----- Constants -----*/
 const gameBoard = []
-
+let winner = ''
 let player1_Turn = true
 let player2_Turn = false
 
@@ -67,7 +67,7 @@ function init() {
     for (let i = 0; i < 6; i++) {
         gameBoard.push(new Array(7).fill(-1))
     }
-
+console.log(gameBoard)
    // call render() at end of init AND dropToken
 }
 
@@ -76,40 +76,44 @@ function init() {
 function dropToken(e) {
      // e.target is <div class="cell row6 column1">1</div>
     
-    //getting column/row info
+    //gets [column, row] info
     const cellIdx = getCellIdx(e)
-    console.log(cellIdx)
+       
     const columnIdxClicked = cellIdx[1]
      
-
-    
-
     let indexToUpdate = getAvailableSlot(columnIdxClicked) // returns Index of available slot
     
+    gameBoard[indexToUpdate[0]][indexToUpdate[1]] = checkPlayerTurn()
+    // we just recorded to gameBoard players move
+
     
-
-    // check which player's turn
-    // returns color of
-
-    // update gameBoard array to 1 or 0 (red or yellow)
-    console.log(indexToUpdate[0])
-    console.log(indexToUpdate[1])
-    console.log(checkPlayerTurn())
-
-    gameBoard[indexToUpdate[0]][indexToUpdate[1]] == checkPlayerTurn()
-console.log([indexToUpdate[0]][indexToUpdate[1]])
+    
+    //check If we have a winnner
     // checkWinner()
     
 
-
-    // nextPlayer()
-
-    // call render function to update DOM/Cell color and Player Turn COLOR
-
-
-
-
+    //render()
 }
+
+function render() {
+    // take state and update varibales
+    // ie.  read gameBoard and update DOM...
+
+    // check if we have winner
+
+    // display a message if we have a winner
+
+
+
+    //update player turn
+    updateTurn()
+}
+
+
+
+
+checkWinner() // needs to return true or false AND set winner variable to player 1 or 2 or draw
+
 
 // check if avaialable space in column
 function getAvailableSlot(columnIdxClicked) {
@@ -119,12 +123,10 @@ function getAvailableSlot(columnIdxClicked) {
         if (gameBoard[i][columnIdxClicked] == -1) {
             return [i, columnIdxClicked]
         } else {
-            return // does nothing
+            return // does nothing or return msg later....
         }
     } 
 }
-
-
 
 const getCellIdx = (cell) => {
     const classArray = cell.target.classList
@@ -132,7 +134,6 @@ const getCellIdx = (cell) => {
     const colClass = classArray[2]; 
     const rowIdx = parseInt(rowClass[3]);
     const colIdx = parseInt(colClass[6]);
-    
     return [rowIdx, colIdx];
   };
 
@@ -145,13 +146,18 @@ function checkPlayerTurn() {
     }
 }
 
+
 function updateTurn() {
     if (player1_Turn == true) {
         player1_Turn == false;
+        player1_TurnToken.classList.remove('.red')
         player2_Turn == true;
+        player2_TurnToken.classList.add('.yellow')
     } else {
-        player1_Turn == false;
-        player2_Turn == true;
+        player2_Turn == false;
+        player2_TurnToken.classList.remove('.yellow')
+        player1_Turn == true;
+        player1_TurnToken.classList.add('.red')
     }
 }
 

@@ -89,8 +89,6 @@ body {
     width: 70px;
     margin-top: 50px;
     cursor:cell;
-    background: linear-gradient(360deg, transparent, #ff0000 95%);
-
   }
   .player2_token{
     grid-row: 2;
@@ -101,7 +99,6 @@ body {
     margin-top: 50px;
     cursor:cell;
     box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 .4em #0fa;
-
   }
   
 
