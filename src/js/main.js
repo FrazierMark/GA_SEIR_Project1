@@ -27,11 +27,18 @@ const allColumns = [column0, column1, column2, column3, column4, column5, column
 
 
 
+
 /*----- Constants -----*/
-const gameBoard = []
-let winner = ''
-let player1_Turn = true
-let player2_Turn = false
+const gameBoard = [];
+
+let winLoseDrawBool = false;
+let winner = '';
+
+let gameInProgress = false;
+
+let player1_Turn = true;
+let player2_Turn = false;
+let lastColumnClicked = [];
 
         //default -1
         // - 1 = null
@@ -48,7 +55,7 @@ let player2_Turn = false
 
 
 /*-----Event Listeners-----*/
-startResetBtn.addEventListener('click', init());
+startResetBtn.addEventListener('click', init);
 
 for (const column of allColumns) {
     for (const cell of column) {
@@ -60,8 +67,11 @@ for (const column of allColumns) {
 
 
 // Set initial state variables - const
-function init() { 
+function init(e) { 
     console.log('Init function operating')
+    gameInProgress = true
+    startResetBtn.innerText = 'Restart Game'
+    //winLoseDrawMsg.classList.add('.endGameMsgDisable')
 
     // initialize 2D matrix of (-1)s
     for (let i = 0; i < 6; i++) {
@@ -74,59 +84,99 @@ console.log(gameBoard)
 
 //aka handleClick
 function dropToken(e) {
-     // e.target is <div class="cell row6 column1">1</div>
+     
     
-    //gets [column, row] info
     const cellIdx = getCellIdx(e)
        
     const columnIdxClicked = cellIdx[1]
      
     let indexToUpdate = getAvailableSlot(columnIdxClicked) // returns Index of available slot
     
+    
     gameBoard[indexToUpdate[0]][indexToUpdate[1]] = checkPlayerTurn()
     // we just recorded to gameBoard players move
+
+
+    lastColumnClicked = [indexToUpdate[0], indexToUpdate[1]]
+    
+
 
     
     
     //check If we have a winnner
     // checkWinner()
-    
 
-    //render()
+    render()
 }
 
 function render() {
+    
+
+    updateDomGameBoard()
+
+    updateTurn()
     // take state and update varibales
     // ie.  read gameBoard and update DOM...
 
-    // check if we have winner
+    
+
+    // check if we have winner  <<<---
 
     // display a message if we have a winner
-
+    // if (winner) {
+    //     winLoseDrawMsg.innerHTML = displayEndMessage()
+    //     winLoseDrawMsg.classList.remove('.endGameMsgDisable')
+    // }
+    
 
 
     //update player turn
-    updateTurn()
+    
 }
 
 
+//lastColumnClicked [5, 0]
+function updateDomGameBoard() {
+    
+    // check to find cells with class List contains appropriate row AND column
+    let classNames = [`row${lastColumnClicked[0]}`, `column${lastColumnClicked[1]}`]
+    let cellToColor = document.getElementsByClassName(`${classNames[0]} ${classNames[1]}`)
+    console.log(cellToColor)
+    if (player1_Turn) {
+        cellToColor[0].classList.add('red')
+    } else {
+        cellToColor[0].classList.add('yellow')
+    }
+}
 
 
-checkWinner() // needs to return true or false AND set winner variable to player 1 or 2 or draw
+function displayEndMessage() {
+    let msg = ''
+    if (winner == 'player1') {
+        return `Player 1 WINS!!`
+    } else if (winner == 'player2') {
+        return `Player 2 WINS!!`
+    } else if (winner == 'draw') {
+        return `DRAW! Play again?`
+    }
+}
+
+
+function checkWinner() {
+
+} // needs to return true or false AND set winner variable to player 1 or 2 or draw
 
 
 // check if avaialable space in column
 function getAvailableSlot(columnIdxClicked) {
-    // get columnInfo from 
-
     for (let i = 5; i > -1; i--){
         if (gameBoard[i][columnIdxClicked] == -1) {
             return [i, columnIdxClicked]
-        } else {
-            return // does nothing or return msg later....
         }
     } 
+    alert(`Column full, dummy.`)
 }
+
 
 const getCellIdx = (cell) => {
     const classArray = cell.target.classList
@@ -140,29 +190,33 @@ const getCellIdx = (cell) => {
 
 function checkPlayerTurn() {
     if (player1_Turn == true) {
-        return 0 // red
+        return 2 // red
     } else {
-        return 1 // yellow
+        return 4 // yellow
     }
 }
 
 
 function updateTurn() {
     if (player1_Turn == true) {
-        player1_Turn == false;
-        player1_TurnToken.classList.remove('.red')
-        player2_Turn == true;
-        player2_TurnToken.classList.add('.yellow')
+        player1_Turn = false;
+        player1_TurnToken.classList.remove('red')
+        player2_Turn = true;
+        player2_TurnToken.classList.add('yellow')
     } else {
-        player2_Turn == false;
-        player2_TurnToken.classList.remove('.yellow')
-        player1_Turn == true;
-        player1_TurnToken.classList.add('.red')
+        player2_Turn = false;
+        player2_TurnToken.classList.remove('yellow')
+        player1_Turn = true;
+        player1_TurnToken.classList.add('red')
     }
 }
 
-// div.classList.remove("red");
-// div.classList.add("yellow");
+
+
+
+
+
+
 
 
 /**
