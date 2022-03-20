@@ -25,7 +25,7 @@ const column7 = document.getElementsByClassName('column7')
 
 const allColumns = [column1, column2, column3, column4, column5, column6, column7]
 
-console.log(column1)
+
 
 /*----- Constants -----*/
 const gameBoard = []
@@ -74,35 +74,32 @@ function init() {
 
 //aka handleClick
 function dropToken(e) {
-    console.log(e.target) // e.target is <div class="cell row6 column1">1</div>
+     // e.target is <div class="cell row6 column1">1</div>
     
     //getting column/row info
     const cellIdx = getCellIdx(e)
+    console.log(cellIdx)
     const columnIdxClicked = cellIdx[1]
      
 
     
-    // getAvailableSlot(columnClicked)
-        // iterate through gameBoard and check space
-        // by checking gameBoard array (any non -1s)
-    
-    // if -1 is returned we are ready to play token...
-    // we need to return the index in order to update the gameBoard...
 
-    //we now have the index of the gameBoardd where we do work...
-    console.log(getAvailableSlot(columnIdxClicked))
+    let indexToUpdate = getAvailableSlot(columnIdxClicked) // returns Index of available slot
     
     
-
-    // get that lowest available cell
 
     // check which player's turn
-    checkPlayerTurn()
+    // returns color of
 
     // update gameBoard array to 1 or 0 (red or yellow)
+    console.log(indexToUpdate[0])
+    console.log(indexToUpdate[1])
+    console.log(checkPlayerTurn())
 
+    gameBoard[indexToUpdate[0]][indexToUpdate[1]] == checkPlayerTurn()
+console.log([indexToUpdate[0]][indexToUpdate[1]])
     // checkWinner()
-
+    
 
 
     // nextPlayer()
@@ -142,9 +139,9 @@ const getCellIdx = (cell) => {
 
 function checkPlayerTurn() {
     if (player1_Turn == true) {
-        return 0
+        return 0 // red
     } else {
-        return 1
+        return 1 // yellow
     }
 }
 
