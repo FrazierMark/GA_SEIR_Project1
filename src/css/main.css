@@ -43,7 +43,7 @@ body {
     width: 630px;
     grid-template-rows: repeat(6, 1fr);
     grid-template-columns: repeat(7, 1fr);
-    border: solid 1px #00cccc;
+    border: solid 2px #00cccc;
     box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 .4em #0fa;
     align-items: center;
     justify-items: center;
@@ -56,7 +56,6 @@ body {
     box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 .4em #0fa;
     border-radius:50%;
     height: 70px;
-    color: white;
     width: 70px;
     justify-content: center;
     text-align:justify;
@@ -165,5 +164,6 @@ body {
   }
 
   .winningHighlight {
-    background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(255,154,0,1) 10%, rgba(208,222,33,1) 20%, rgba(79,220,74,1) 30%, rgba(63,218,216,1) 40%, rgba(47,201,226,1) 50%, rgba(28,127,238,1) 60%, rgba(95,21,242,1) 70%, rgba(186,12,248,1) 80%, rgba(251,7,217,1) 90%, rgba(255,0,0,1) 100%);
+    border: solid 5px #009dff;
+    box-shadow: 1px 1px rgb(0, 217, 255), 5px 0 .8em rgb(0, 140, 255);
   }

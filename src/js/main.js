@@ -119,6 +119,7 @@ function displayEndMessage(winner, draw) {
             highlightWinner(winner)
             return `Player 1 WINS!!`
         } else if (winner[0] == 2) {
+            highlightWinner(winner)
             return `Player 2 WINS!!`
         } 
     } else if (draw) {
@@ -152,7 +153,7 @@ function checkWinner() {
         for (let j = 0; j < columnLength - 3; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i][j + 1], gameBoard[i][j + 2], gameBoard[i][j + 3])) {
                 winner = true;
-                // returns 1 or 2 for winner, and an array of coordinates to later highlightWinner
+                // returns 1 or 2 for winner, AND an array of coordinates to later highlightWinner()
                 return [gameBoard[i][j], `${i}${j}`, `${i}${j+1}`, `${i}${j+2}`, `${i}${j+3}`]
             }
         }
@@ -163,7 +164,7 @@ function checkWinner() {
         for (let j = 0; j < columnLength; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i + 1][j], gameBoard[i + 2][j], gameBoard[i + 3][j])) {
                 winner = true;
-                return gameBoard[i][j]
+                return [gameBoard[i][j], `${i}${j}`, `${i+1}${j}`, `${i+2}${j}`, `${i+3}${j}`]
             }
         }
     }
@@ -173,7 +174,7 @@ function checkWinner() {
         for (let j = 0; j < columnLength - 2; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i - 1][j + 1], gameBoard[i - 2][j + 2], gameBoard[i - 3][j + 3])) {
                 winner = true;
-                return gameBoard[i][j]
+                return [gameBoard[i][j], `${i}${j}`, `${i-1}${j+1}`, `${i-2}${j+2}`, `${i-3}${j+3}`]
             }
         }
     }
@@ -183,7 +184,7 @@ function checkWinner() {
         for (let j = 0; j < columnLength - 2; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i + 1][j + 1], gameBoard[i + 2][j + 2], gameBoard[i + 3][j + 3])) {
                 winner = true;
-                return gameBoard[i][j];
+                return [gameBoard[i][j], `${i}${j}`, `${i+1}${j+1}`, `${i+2}${j+2}`, `${i+3}${j+3}`];
             }
         }
     }
@@ -204,8 +205,8 @@ function highlightWinner(winningFour) {
     winningFour.forEach(cell => {
         let winningCellClassNames = [`row${cell[0]}`, `column${cell[1]}`]  
         let cellToHighlight = document.getElementsByClassName(`${winningCellClassNames[0]} ${winningCellClassNames[1]} `)
-        cellToHighlight[0].classList.remove('yellow')
-        cellToHighlight[0].classList.remove('red')
+        // cellToHighlight[0].classList.remove('yellow')
+        // cellToHighlight[0].classList.remove('red')
         cellToHighlight[0].classList.add('winningHighlight')
     })
 }
