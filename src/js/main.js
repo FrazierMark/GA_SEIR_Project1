@@ -290,34 +290,6 @@ function updateTurn() {
 
 
 
-
-//random color array
-const colors = new Float32Array(parameters.count * 3)
-for (let i = 0; i < count * 3; i++) { // Multiply by 3 cause, x, y, z
-    positions[i] = (Math.random() - 0.5) * 10 // Math.random() -0.5 creates value between -0.5 and +0.5
-    // create random red, green, blue value for each particle
-    colors[i] = Math.random()
-}
-
-
-
-// activate vertexColors
-particlesMaterial.vertexColors = true;
-particlesMaterial.map = particleTexture
-particlesMaterial.transparent = true;
-particlesMaterial.alphaMap = particleTexture
-particlesMaterial.depthWrite = false
-//  use blending to add the color of that pixel to the color of the pixel already drawn
-particlesMaterial.blending = THREE.AdditiveBlending;
-
-
-
-
-
-
-
-
-
 // // Debugging GUI
 const gui = new dat.GUI()
 
@@ -329,21 +301,33 @@ const scene = new THREE.Scene()
 
 
 // Textures for particles
- const textureLoader = new THREE.TextureLoader()
- const particleTexture = textureLoader.load('/textures/particles/2.png')
+const textureLoader = new THREE.TextureLoader()
+const particleTexture = textureLoader.load('/textures/particles/2.png')
+
+//Test Cube
+// const cube = new THREE.Mesh(
+//     new THREE.BoxGeometry(1, 1, 1),
+//     new THREE.MeshBasicMaterial()
+// )
+// scene.add(cube)
+
+
 
 //Particle parameters
 const parameters = {}
 parameters.count = 1000
-parameters.size = 0.02
+parameters.size = 0.12
 
-//
+
+
+
 const generateParticleFormation = () => {
     // Geometry
      const geometry = new THREE.BufferGeometry()
 
     // Array of x,y,z for vertex positions
-     const positions = new Float32Array(parameters.count * 3)
+    const positions = new Float32Array(parameters.count * 3)
+    const colors = new Float32Array(parameters.count * 3)
  
      for(let i = 0; i < parameters.count; i++)
      {
@@ -353,22 +337,33 @@ const generateParticleFormation = () => {
          positions[i3    ] = (Math.random() - 0.5) * 3
          positions[i3 + 1] = (Math.random() - 0.5) * 3
          positions[i3 + 2] = (Math.random() - 0.5) * 3
+         colors[i3] = Math.random()
+         colors[i3 + 1] = Math.random()
+         colors[i3 + 2] = Math.random()
      }
  
     //Create the Three.js BufferAttribute and specify that each peice of information is composed of 3 values
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
-
+    
+    
     // Materials
-     const material = new THREE.PointsMaterial({
+    const material = new THREE.PointsMaterial({
         size: parameters.size,
         sizeAttenuation: true,
         depthWrite: false,
+        vertexColors: true,
+        map: particleTexture,
+        transparent: true,
+        alphaMap: particleTexture,
+        
+        //  use blending to add the color of that pixel to the color of the pixel already drawn
         blending: THREE.AdditiveBlending
      })
     
-     const points = new THREE.Points(geometry, material)
-     scene.add(points)
+    
+     const particles = new THREE.Points(geometry, material)
+     scene.add(particles)
 
 }
 generateParticleFormation()
