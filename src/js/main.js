@@ -129,12 +129,12 @@ function displayEndMessage(winner, draw) {
 }
 
 
-function checkDraw() {
+async function checkDraw() {
     // check if we have no -1, no winner
-    for (let i = 0; i < rowHeight; i++){
-        for (let j = 0; j < columnLength; j++){
-            console.log([i][j])
+    for (let i = rowHeight; i > -1; i--){
+        for (let j = columnLength; j < -1; j--){
             if (gameBoard[i][j] != -1 && winner == false) {
+                console.log(gameBoard)
                 draw = true
                 return true
             } else {
