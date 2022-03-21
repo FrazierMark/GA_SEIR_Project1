@@ -101,7 +101,7 @@ function render() {
 
     // check if we have winner function <<<--------
 
-
+    checkWinner()
     // finished message on win/draw
 
 
@@ -151,23 +151,37 @@ function checkWinner() {
     const rowHeight = 6
     const columnLength = 7
     
-
     // check horizontallly all rows 
     for (let i = 0; i < rowHeight; i++) {
         for (let j = 0; j < columnLength - 3; j++) {
-            if (check4InARow(gameBoard)[i][j], gameBoard[i + 1][j], gameBoard[i + 2][j], gameBoard[i + 3][j]) {
+            if (check4InARow(gameBoard[i][j], gameBoard[i][j + 1], gameBoard[i][j + 2], gameBoard[i][j + 3])) {
                 return gameBoard[i][j]
-            } 
+            }
+        }
+    }
+
+    // check vertical all columns
+    for (let i = 0; i < rowHeight - 3; i++) {
+        for (let j = 0; j < columnLength; j++) {
+            if (check4InARow(gameBoard[i][j], gameBoard[i + 1][j], gameBoard[i + 2][j], gameBoard[i + 3][j])) {
+                console.log(gameBoard[i][j])
+                return gameBoard[i][j]
+            }
         }
     }
 
 
 
+
+}
+
     
+
+
     // checkWinner() helper function
 function check4InARow (a, b, c, d) {
     // Check first cell is not empty, and matching cells
-    return ((a != -1) && (a == b) && (b == c) && (c == d))
+    return ((a != -1) && (a == b) && (a == c) && (a == d))
     };
 
 
@@ -392,5 +406,4 @@ const tick = () =>
     window.requestAnimationFrame(tick)
 }
 
-tick()
-
+    tick()
