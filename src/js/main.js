@@ -81,9 +81,8 @@ function dropToken(e) {
     const columnIdxClicked = cellIdx[1]
     let indexToUpdate = getAvailableSlot(columnIdxClicked) // returns Index of available slot
     gameBoard[indexToUpdate[0]][indexToUpdate[1]] = checkPlayerTurn() // returns either 1 or 2 for player move
-    // we just recorded to gameBoard players move
+    // record to gameBoard players move
     lastColumnClicked = [indexToUpdate[0], indexToUpdate[1]]
-
     render()
 }
 
@@ -201,16 +200,12 @@ function check4InARow (a, b, c, d) {
 function highlightWinner(winningFour) {
     //remove 1st element (winning player num)
     winningFour.shift()
-
     winningFour.forEach(cell => {
         let winningCellClassNames = [`row${cell[0]}`, `column${cell[1]}`]  
         let cellToHighlight = document.getElementsByClassName(`${winningCellClassNames[0]} ${winningCellClassNames[1]} `)
-        // cellToHighlight[0].classList.remove('yellow')
-        // cellToHighlight[0].classList.remove('red')
         cellToHighlight[0].classList.add('winningHighlight')
     })
 }
-
 
 
 function clearGameBoard() {
@@ -299,7 +294,7 @@ function updateTurn() {
 
 
 // // Debugging GUI
-// const gui = new dat.GUI()
+const gui = new dat.GUI()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -307,81 +302,84 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
-const parameteres = {}
+
+// Textures for particles
+ const textureLoader = new THREE.TextureLoader()
+ const particleTexture = textureLoader.load('/textures/particles/2.png')
+
+//Particle parameters
+const parameters = {}
+parameters.count = 1000
+parameters.size = 0.02
 
 //
 const generateParticleFormation = () => {
+    // Geometry
+     const geometry = new THREE.BufferGeometry()
+
+    // Array of x,y,z for vertex positions
+     const positions = new Float32Array(parameters.count * 3)
+ 
+     for(let i = 0; i < parameters.count; i++)
+     {
+         //accesses every 3 elements in array
+         const i3 = i * 3
+ 
+         positions[i3    ] = (Math.random() - 0.5) * 3
+         positions[i3 + 1] = (Math.random() - 0.5) * 3
+         positions[i3 + 2] = (Math.random() - 0.5) * 3
+     }
+ 
+     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+    // Materials
+     const material = new THREE.PointsMaterial({
+        size: parameters.size,
+        sizeAttenuation: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+     })
+    
+     const points = new THREE.Points(geometry, material)
+     scene.add(points)
 
 }
 generateParticleFormation()
 
 
-/**
- * Textures
- */
-const textureLoader = new THREE.TextureLoader()
-const particleTexture = textureLoader.load('/textures/particles/2.png')
-
-/**
- * Test cube
- */
-const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial()
-)
-//scene.add(cube)
-
-/**
-    Particles
- **/
-
-// Geometry
-const particlesSphereGeometry = new THREE.SphereBufferGeometry(1, 32, 32);
-
-// Creating a custome Geometry
-const particlesGeometry = new THREE.BufferGeometry() //<<<<<<---------
-const count = 20000
-
-const positions = new Float32Array(count * 3) // x, y, z
-const colors = new Float32Array(count * 3)
-
-for (let i = 0; i < count * 3; i++) { // Multiply by 3 cause, x, y, z
-    positions[i] = (Math.random() - 0.5) * 10 // Math.random() -0.5 creates value between -0.5 and +0.5
-    // create random red, green, blue value for each particle
-    colors[i] = Math.random()
-}
+// random color's array
+// const colors = new Float32Array(parameters.count * 3)
+// for (let i = 0; i < count * 3; i++) { // Multiply by 3 cause, x, y, z
+//     positions[i] = (Math.random() - 0.5) * 10 // Math.random() -0.5 creates value between -0.5 and +0.5
+//     // create random red, green, blue value for each particle
+//     colors[i] = Math.random()
+// }
 
 // Create the Three.js BufferAttribute and specify that each peice of information is composed of 3 values
-particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3)) 
+// particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3)) 
 
-particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+// particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
 
-//Material
-const particlesMaterial = new THREE.PointsMaterial({
-    size: 0.1,
-    sizeAttenuation: true
-})
-// activate vertexColors
-particlesMaterial.vertexColors = true;
-
-// particlesMaterial.color = new THREE.Color('#ff88cc');
-
-particlesMaterial.map = particleTexture
-// Making texture transparent inorder to see thrugh it...
-particlesMaterial.transparent = true;
-particlesMaterial.alphaMap = particleTexture
-// particlesMaterial.alphaTest = 0.001
-// particlesMaterial.depthTest = false
-particlesMaterial.depthWrite = false
-//  use blending to add the color of that pixel to the color of the pixel already drawn
-particlesMaterial.blending = THREE.AdditiveBlending;
+// //Material
+// const particlesMaterial = new THREE.PointsMaterial({
+//     size: 0.1,
+//     sizeAttenuation: true
+// })
+// // activate vertexColors
+// particlesMaterial.vertexColors = true;
+// particlesMaterial.map = particleTexture
+// particlesMaterial.transparent = true;
+// particlesMaterial.alphaMap = particleTexture
+// particlesMaterial.depthWrite = false
+// //  use blending to add the color of that pixel to the color of the pixel already drawn
+// particlesMaterial.blending = THREE.AdditiveBlending;
 
 
 
-// Points
-// Creates the particles (in a sphere shape cause of SphereBufferGeometry)
-const particles = new THREE.Points(particlesGeometry, particlesMaterial)
-scene.add(particles)
+// //Points
+// //Creates the particles (in a sphere shape cause of SphereBufferGeometry)
+// const particles = new THREE.Points(particlesGeometry, particlesMaterial)
+// scene.add(particles)
 
 
 // Aspect Window ratio
@@ -389,6 +387,7 @@ const windowSize = {
     width: window.innerWidth,
     height: window.innerHeight
 }
+
 
 // Allow window and scene objects to resize on window adjustment
 window.addEventListener('resize', () => {
@@ -404,6 +403,7 @@ window.addEventListener('resize', () => {
     renderer.setSize(windowSize.width, windowSize.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
+
 
 //Camera
 const camera = new THREE.PerspectiveCamera(75, windowSize.width / windowSize.height, 0.1, 100)
@@ -440,16 +440,16 @@ const tick = () =>
     //Update particles
     // particles.rotation.y = elapsedTime * 0.2
     // Wave-like movement of particles
-    for (let i = 0; i < count; i++) {
-        const i3 = i * 3
+    // for (let i = 0; i < count; i++) {
+    //     const i3 = i * 3
 
-        const x = particlesGeometry.attributes.position.array[i3]
-        particlesGeometry.attributes.position.array[i3 + 1] = Math.sin(elapsedTime + x)
-        // The y coordinate can be access in the array at the index i3 + 1:
-       // particlesGeometry.attributes.position.array[i3 + 1] = Math.sin(elapsedTime)
-    }
-    // The problem is that Three.js has to be notified that the geometry changed
-    particlesGeometry.attributes.position.needsUpdate = true 
+    //     const x = particlesGeometry.attributes.position.array[i3]
+    //     particlesGeometry.attributes.position.array[i3 + 1] = Math.sin(elapsedTime + x)
+    //     // The y coordinate can be access in the array at the index i3 + 1:
+    //    // particlesGeometry.attributes.position.array[i3 + 1] = Math.sin(elapsedTime)
+    // }
+    // // The problem is that Three.js has to be notified that the geometry changed
+    // particlesGeometry.attributes.position.needsUpdate = true 
 
 
     // Render

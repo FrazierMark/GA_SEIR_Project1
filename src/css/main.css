@@ -164,6 +164,6 @@ body {
   }
 
   .winningHighlight {
-    border: solid 5px #009dff;
+    border: solid 5px #5ac0ff;
     box-shadow: 1px 1px rgb(0, 217, 255), 5px 0 .8em rgb(0, 140, 255);
   }
