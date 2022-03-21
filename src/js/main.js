@@ -290,11 +290,12 @@ function updateTurn() {
 
 
 
-// // Debugging GUI
-const gui = new dat.GUI()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
+
+// // Debugging GUI
+const gui = new dat.GUI({ width: 100 })
 
 // Scene
 const scene = new THREE.Scene()
@@ -304,26 +305,38 @@ const scene = new THREE.Scene()
 const textureLoader = new THREE.TextureLoader()
 const particleTexture = textureLoader.load('/textures/particles/2.png')
 
-//Test Cube
-// const cube = new THREE.Mesh(
-//     new THREE.BoxGeometry(1, 1, 1),
-//     new THREE.MeshBasicMaterial()
-// )
-// scene.add(cube)
-
-
 
 //Particle parameters
-const parameters = {}
-parameters.count = 1000
-parameters.size = 0.12
+const parameters = {
+    count: 10000,
+    size: 0.12,
+    radius: 5,
+    forks: 3,
+    curve: 1,
+    randomness: 0.2,
+    randomPower: 3
 
+}
+
+let geometry = null;
+let material = null;
+let particles = null;
 
 
 
 const generateParticleFormation = () => {
+
+    // Remove particles
+    if(particles !== null) {
+        geometry.dispose()
+        material.dispose()
+        scene.remove(particles)
+    }
+
+   
+    
     // Geometry
-     const geometry = new THREE.BufferGeometry()
+    geometry = new THREE.BufferGeometry()
 
     // Array of x,y,z for vertex positions
     const positions = new Float32Array(parameters.count * 3)
@@ -331,15 +344,29 @@ const generateParticleFormation = () => {
  
      for(let i = 0; i < parameters.count; i++)
      {
-         //accesses every 3 elements in array
-         const i3 = i * 3
- 
-         positions[i3    ] = (Math.random() - 0.5) * 3
-         positions[i3 + 1] = (Math.random() - 0.5) * 3
-         positions[i3 + 2] = (Math.random() - 0.5) * 3
-         colors[i3] = Math.random()
-         colors[i3 + 1] = Math.random()
-         colors[i3 + 2] = Math.random()
+        //accesses every 3 elements in array
+        const i3 = i * 3
+
+        const radius = Math.random() * parameters.radius
+        // every 3rd value, [0, .33, .66 | 0, .33, .66 | 0, .33, .66]...
+        // Math.PI * 2 == 1 full circle
+        const forkAngle = (i % parameters.forks) / parameters.forks * Math.PI * 2
+        // further the particle is from center will increase the curveAngle
+        const curveAngle = radius * parameters.curve
+
+        //create random (x,y,z) positions, (multiply by -0.5 to get values between -.5 and 0.5)
+        const randomX = (Math.random() - 0.5) * parameters.randomness * radius
+        const randomY = (Math.random() - 0.5) * parameters.randomness * radius
+        const randomZ = (Math.random() - 0.5) * parameters.randomness * radius
+
+        positions[i3] = Math.cos(forkAngle + curveAngle) * radius + randomX  // position on x-axis
+        positions[i3 + 1] = randomY // position on y-axis
+        positions[i3 + 2] = Math.sin(forkAngle + curveAngle) * radius + randomZ // position on z-axis
+        
+        colors[i3] = Math.random()
+        colors[i3 + 1] = Math.random()
+        colors[i3 + 2] = Math.random()
+
      }
  
     //Create the Three.js BufferAttribute and specify that each peice of information is composed of 3 values
@@ -348,7 +375,7 @@ const generateParticleFormation = () => {
     
     
     // Materials
-    const material = new THREE.PointsMaterial({
+    material = new THREE.PointsMaterial({
         size: parameters.size,
         sizeAttenuation: true,
         depthWrite: false,
@@ -362,19 +389,23 @@ const generateParticleFormation = () => {
      })
     
     
-     const particles = new THREE.Points(geometry, material)
-     scene.add(particles)
+    particles = new THREE.Points(geometry, material)
+    scene.add(particles)
 
 }
+
 generateParticleFormation()
 
 
+// Tweaking parameters in GUI for count and size
+gui.add(parameters, 'count').min(100).max(1000000).step(100).onFinishChange(generateParticleFormation);
+gui.add(parameters, 'size').min(0.001).max(1.1).step(0.001).onFinishChange(generateParticleFormation);
+gui.add(parameters, 'radius').min(0.01).max(22).step(0.01).onFinishChange(generateParticleFormation);
+gui.add(parameters, 'forks').min(2).max(20).step(1).onFinishChange(generateParticleFormation);
+gui.add(parameters, 'curve').min(- 5).max(5).step(0.001).onFinishChange(generateParticleFormation);
+gui.add(parameters, 'randomness').min(0).max(2).step(0.001).onFinishChange(generateParticleFormation);
+gui.add(parameters, 'randomPower').min(1).max(10).step(0.001).onFinishChange(generateParticleFormation);
 
-
-// //Points
-// //Creates the particles (in a sphere shape cause of SphereBufferGeometry)
-// const particles = new THREE.Points(particlesGeometry, particlesMaterial)
-// scene.add(particles)
 
 
 // Aspect Window ratio
@@ -411,9 +442,7 @@ scene.add(camera)
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
-/**
- * Renderer
- */
+// Renderer (WebGl)
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
