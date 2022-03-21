@@ -64,8 +64,7 @@ for (const column of allColumns) {
 
 
 // Set initial state variables - const
-function init(e) { 
-    console.log('Init function operating')
+function init(e) {
     startResetBtn.innerText = 'Restart Game?'
     
     
@@ -91,12 +90,10 @@ function dropToken(e) {
 }
 
 function render() {
-    
     updateDomGameBoard()
 
     updateTurn()
    
-    console.log(winLoseDrawMsg)
     winLoseDrawMsg.innerText = displayEndMessage(checkWinner(), checkDraw())
     
     if (winner == true || draw == true) {
@@ -108,7 +105,6 @@ function render() {
 
 
 function updateDomGameBoard() {
-    
     // check to find cells with class List containing appropriate row AND column
     let classNames = [`row${lastColumnClicked[0]}`, `column${lastColumnClicked[1]}`]
     let cellToColor = document.getElementsByClassName(`${classNames[0]} ${classNames[1]}`)
@@ -132,10 +128,12 @@ function displayEndMessage(winner, draw) {
     } 
 }
 
+
 function checkDraw() {
     // check if we have no -1, no winner
     for (let i = 0; i < rowHeight; i++){
         for (let j = 0; j < columnLength; j++){
+            console.log([i][j])
             if (gameBoard[i][j] != -1 && winner == false) {
                 draw = true
                 return true
@@ -203,13 +201,10 @@ function clearGameBoard() {
     gameBoard = []
     winner = false;
     draw = false;
-    player1_Turn = true;
-    player2_Turn = false;
     lastColumnClicked = [];
 
     if (!winLoseDrawMsg.classList.contains('endGameMsgDisable')) {
         winLoseDrawMsg.classList.add('endGameMsgDisable')
-        console.log(winLoseDrawMsg.classList)
     }
 
     startResetBtn.innerText = `Restart Game?`
