@@ -97,7 +97,7 @@ function render() {
     updateTurn()
    
     console.log(winLoseDrawMsg)
-    winLoseDrawMsg.innerText = displayEndMessage(checkWinner())
+    winLoseDrawMsg.innerText = displayEndMessage(checkWinner(), checkDraw())
     
     if (winner == true || draw == true) {
         console.log(winLoseDrawMsg.classList)
@@ -126,12 +126,10 @@ function displayEndMessage(winner, draw) {
             return `Player 1 WINS!!`
         } else if (winner == 2) {
             return `Player 2 WINS!!`
-        }  else {
-            return false
-        }
+        } 
     } else if (draw) {
         return `DRAW! Play again?`
-    }
+    } 
 }
 
 function checkDraw() {
@@ -150,8 +148,6 @@ function checkDraw() {
 
 
 function checkWinner() {
-
-    // going to cache result so we save on time complexity
     
     // check horizontallly all rows 
     for (let i = 0; i < rowHeight; i++) {
@@ -191,8 +187,7 @@ function checkWinner() {
                 return gameBoard[i][j];
             }
         }
-}
-
+    }
 
 }
 
@@ -206,12 +201,11 @@ function check4InARow (a, b, c, d) {
 
 function clearGameBoard() {
     gameBoard = []
-    let winner = false;
-    let draw = false;
-
-    let player1_Turn = true;
-    let player2_Turn = false;
-    let lastColumnClicked = [];
+    winner = false;
+    draw = false;
+    player1_Turn = true;
+    player2_Turn = false;
+    lastColumnClicked = [];
 
     if (!winLoseDrawMsg.classList.contains('endGameMsgDisable')) {
         winLoseDrawMsg.classList.add('endGameMsgDisable')
@@ -219,6 +213,7 @@ function clearGameBoard() {
     }
 
     startResetBtn.innerText = `Restart Game?`
+    
 
     for (const column of allColumns) {
         for (const cell of column) {
