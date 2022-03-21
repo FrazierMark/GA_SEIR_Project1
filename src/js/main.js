@@ -3,13 +3,19 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
+// calls the init function on load
+document.addEventListener('DOMContentLoaded', function() {
+    init();
+}, false);
+
+
 
 /*----- DOM Elements -----*/
 const player1_TurnToken = document.querySelector(".player1_token")
 const player2_TurnToken = document.querySelector(".player2_token")
 
 //fyi, returns node list <<---
-const cells = document.querySelectorAll(".cell")
+
 const startResetBtn = document.querySelector(".start_reset")
 const winLoseDrawMsg = document.querySelector('.win_lose_draw')
 
@@ -24,7 +30,16 @@ const column6 = document.getElementsByClassName('column6')
 const allColumns = [column0, column1, column2, column3, column4, column5, column6]
 
 /*----- Constants -----*/
-const gameBoard = [];
+let gameBoard = [];
+
+// [
+//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[0]
+//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[1]
+//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[3]
+//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[4]
+//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[5]
+//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[6]
+// ]
 
 let winnerCheckCache = {};
 
@@ -37,18 +52,6 @@ let lastColumnClicked = [];
 const rowHeight = 6
 const columnLength = 7
 
-        //default -1
-        // - 1 = null
-        // 0 = red
-        // 1 = yellow
-// [
-//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[0]
-//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[1]
-//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[3]
-//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[4]
-//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[5]
-//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[6]
-// ]
 
 /*-----Event Listeners-----*/
 startResetBtn.addEventListener('click', init);
@@ -59,12 +62,14 @@ for (const column of allColumns) {
     }
   }
 
-// if Start button clicked change innerHTML to reset
 
 // Set initial state variables - const
 function init(e) { 
     console.log('Init function operating')
-    startResetBtn.innerText = 'Restart Game'
+    startResetBtn.innerText = 'Restart Game?'
+    
+    
+    clearGameBoard()
 
     // initialize 2D matrix of (-1)s
     for (let i = 0; i < 6; i++) {
@@ -78,7 +83,7 @@ function dropToken(e) {
     const cellIdx = getCellIdx(e)
     const columnIdxClicked = cellIdx[1]
     let indexToUpdate = getAvailableSlot(columnIdxClicked) // returns Index of available slot
-    gameBoard[indexToUpdate[0]][indexToUpdate[1]] = checkPlayerTurn()
+    gameBoard[indexToUpdate[0]][indexToUpdate[1]] = checkPlayerTurn() // returns either 1 or 2 for player move
     // we just recorded to gameBoard players move
     lastColumnClicked = [indexToUpdate[0], indexToUpdate[1]]
 
@@ -87,18 +92,18 @@ function dropToken(e) {
 
 function render() {
     
-
     updateDomGameBoard()
 
     updateTurn()
    
-
-    winLoseDrawMsg.innerText = displayEndMessage(checkWinner(), checkDraw())
-    if (winner || draw) {
-        winLoseDrawMsg.classList.remove('.endGameMsgDisable')
+    console.log(winLoseDrawMsg)
+    winLoseDrawMsg.innerText = displayEndMessage(checkWinner())
+    
+    if (winner == true || draw == true) {
+        console.log(winLoseDrawMsg.classList)
+        winLoseDrawMsg.classList.remove('endGameMsgDisable')
         startResetBtn.innerText = `Play again?`
     }
-
 }
 
 
@@ -107,7 +112,6 @@ function updateDomGameBoard() {
     // check to find cells with class List containing appropriate row AND column
     let classNames = [`row${lastColumnClicked[0]}`, `column${lastColumnClicked[1]}`]
     let cellToColor = document.getElementsByClassName(`${classNames[0]} ${classNames[1]}`)
-    console.log(cellToColor)
     if (player1_Turn) {
         cellToColor[0].classList.add('red')
     } else {
@@ -118,32 +122,30 @@ function updateDomGameBoard() {
 
 function displayEndMessage(winner, draw) {
     if (winner) {
-        
         if (winner == 1) {
             return `Player 1 WINS!!`
         } else if (winner == 2) {
             return `Player 2 WINS!!`
-        } else if (draw == true) {
-            return `DRAW! Play again?`
-        } else {
+        }  else {
             return false
         }
+    } else if (draw) {
+        return `DRAW! Play again?`
     }
-
 }
 
 function checkDraw() {
     // check if we have no -1, no winner
     for (let i = 0; i < rowHeight; i++){
         for (let j = 0; j < columnLength; j++){
-            if (gameBoard[i][j] != -1 & winner == false) {
+            if (gameBoard[i][j] != -1 && winner == false) {
                 draw = true
-                return 
+                return true
+            } else {
+                return false
             }
         }
     }
-
-
 }
 
 
@@ -198,9 +200,33 @@ function checkWinner() {
     // checkWinner() helper function
 function check4InARow (a, b, c, d) {
     // Check first cell is not empty, and matching cells
-    return ((a != -1) && (a == b) && (a == c) && (a == d))
+    return ((a != -1) && (a == b) && (b == c) && (c == d))
     };
 
+
+function clearGameBoard() {
+    gameBoard = []
+    let winner = false;
+    let draw = false;
+
+    let player1_Turn = true;
+    let player2_Turn = false;
+    let lastColumnClicked = [];
+
+    if (!winLoseDrawMsg.classList.contains('endGameMsgDisable')) {
+        winLoseDrawMsg.classList.add('endGameMsgDisable')
+        console.log(winLoseDrawMsg.classList)
+    }
+
+    startResetBtn.innerText = `Restart Game?`
+
+    for (const column of allColumns) {
+        for (const cell of column) {
+            cell.classList.remove('yellow');
+            cell.classList.remove('red');
+        }
+      }
+}
 
 
     
