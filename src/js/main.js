@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
 const player1_TurnToken = document.querySelector(".player1_token")
 const player2_TurnToken = document.querySelector(".player2_token")
 
-//fyi, returns node list <<---
-
 const startResetBtn = document.querySelector(".start_reset")
 const winLoseDrawMsg = document.querySelector('.win_lose_draw')
 
@@ -97,7 +95,6 @@ function render() {
     winLoseDrawMsg.innerText = displayEndMessage(checkWinner(), checkDraw())
     
     if (winner == true || draw == true) {
-        console.log(winLoseDrawMsg.classList)
         winLoseDrawMsg.classList.remove('endGameMsgDisable')
         startResetBtn.innerText = `Play again?`
     }
@@ -118,9 +115,10 @@ function updateDomGameBoard() {
 
 function displayEndMessage(winner, draw) {
     if (winner) {
-        if (winner == 1) {
+        if (winner[0] == 1) {
+            highlightWinner(winner)
             return `Player 1 WINS!!`
-        } else if (winner == 2) {
+        } else if (winner[0] == 2) {
             return `Player 2 WINS!!`
         } 
     } else if (draw) {
@@ -129,18 +127,20 @@ function displayEndMessage(winner, draw) {
 }
 
 
-async function checkDraw() {
-    // check if we have no -1, no winner
-    for (let i = rowHeight; i > -1; i--){
-        for (let j = columnLength; j < -1; j--){
-            if (gameBoard[i][j] != -1 && winner == false) {
-                console.log(gameBoard)
-                draw = true
-                return true
-            } else {
-                return false
-            }
+function checkDraw() {
+    // check if we have no -1s in gameBoard & no winner
+    let checkNums = []
+
+    for (let i = rowHeight - 1; i > -1; i--){
+        for (let j = columnLength - 1; j > -1; j--) {
+            checkNums.push(gameBoard[i][j])
         }
+    }
+    if (!checkNums.includes(-1) && winner == false) {
+        draw = true
+        return true
+    } else {
+        return false
     }
 }
 
@@ -152,7 +152,7 @@ function checkWinner() {
         for (let j = 0; j < columnLength - 3; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i][j + 1], gameBoard[i][j + 2], gameBoard[i][j + 3])) {
                 winner = true;
-                return gameBoard[i][j]
+                return [gameBoard[i][j], gameBoard[i][j + 1], gameBoard[i][j + 2], gameBoard[i][j + 3]]
             }
         }
     }
@@ -167,7 +167,7 @@ function checkWinner() {
         }
     }
 
-    // check diagonal, top-left to bottom-right  '\'
+    // check diagonal, top-left to bottom-right 
     for (let i = 3; i < rowHeight; i++) {
         for (let j = 0; j < columnLength - 2; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i - 1][j + 1], gameBoard[i - 2][j + 2], gameBoard[i - 3][j + 3])) {
@@ -177,7 +177,7 @@ function checkWinner() {
         }
     }
 
-    // check diagonal, top-right to bottom-left  '/'
+    // check diagonal, top-right to bottom-left
     for (let i = 0; i < rowHeight - 3; i++) {
         for (let j = 0; j < columnLength - 2; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i + 1][j + 1], gameBoard[i + 2][j + 2], gameBoard[i + 3][j + 3])) {
@@ -194,7 +194,11 @@ function checkWinner() {
 function check4InARow (a, b, c, d) {
     // Check first cell is not empty, and matching cells
     return ((a != -1) && (a == b) && (b == c) && (c == d))
-    };
+};
+    
+function highlightWinner([a, b, c, d]) {
+    //
+}
 
 
 function clearGameBoard() {
@@ -265,6 +269,9 @@ function updateTurn() {
         player1_TurnToken.classList.add('red')
     }
 }
+
+
+
 
 
 
