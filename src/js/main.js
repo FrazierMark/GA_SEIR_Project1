@@ -160,7 +160,7 @@ function checkWinner() {
         }
     }
 
-    // check vertical all columns
+    // check vertical, all columns
     for (let i = 0; i < rowHeight - 3; i++) {
         for (let j = 0; j < columnLength; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i + 1][j], gameBoard[i + 2][j], gameBoard[i + 3][j])) {
@@ -170,7 +170,25 @@ function checkWinner() {
         }
     }
 
+    // check diagonal, top-left to bottom-right  '\'
+    for (let i = 3; i < rowHeight; i++) {
+        for (let j = 0; j < columnLength - 2; j++) {
+            if (check4InARow(gameBoard[i][j], gameBoard[i - 1][j + 1], gameBoard[i - 2][j + 2], gameBoard[i - 3][j + 3])) {
+                console.log(gameBoard[i][j])
+                return gameBoard[i][j]
+            }
+        }
+    }
 
+    // check diagonal, top-right to bottom-left  '/'
+    for (let i = 0; i < rowHeight - 3; i++) {
+        for (let j = 0; j < columnLength - 2; j++) {
+            if (check4InARow(gameBoard[i][j], gameBoard[i + 1][j + 1], gameBoard[i + 2][j + 2], gameBoard[i + 3][j + 3])) {
+                console.log(gameBoard[i][j])
+                return gameBoard[i][j]
+            }
+        }
+}
 
 
 }
