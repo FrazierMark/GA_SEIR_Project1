@@ -28,14 +28,14 @@ const gameBoard = [];
 
 let winnerCheckCache = {};
 
-let winLoseDrawBool = false;
-let winner = '';
-
-let gameInProgress = false;
+let winner = false;
+let draw = false;
 
 let player1_Turn = true;
 let player2_Turn = false;
 let lastColumnClicked = [];
+const rowHeight = 6
+const columnLength = 7
 
         //default -1
         // - 1 = null
@@ -64,9 +64,7 @@ for (const column of allColumns) {
 // Set initial state variables - const
 function init(e) { 
     console.log('Init function operating')
-    gameInProgress = true
     startResetBtn.innerText = 'Restart Game'
-    //winLoseDrawMsg.classList.add('.endGameMsgDisable')
 
     // initialize 2D matrix of (-1)s
     for (let i = 0; i < 6; i++) {
@@ -84,9 +82,6 @@ function dropToken(e) {
     // we just recorded to gameBoard players move
     lastColumnClicked = [indexToUpdate[0], indexToUpdate[1]]
 
-    //check If we have a winnner
-    // checkWinner()
-
     render()
 }
 
@@ -98,30 +93,18 @@ function render() {
     updateTurn()
    
 
+    winLoseDrawMsg.innerText = displayEndMessage(checkWinner(), checkDraw())
+    if (winner || draw) {
+        winLoseDrawMsg.classList.remove('.endGameMsgDisable')
+        startResetBtn.innerText = `Play again?`
+    }
 
-    // check if we have winner function <<<--------
-
-    checkWinner()
-    // finished message on win/draw
-
-
-    //checkWinner function can be within the displayMessage function
-
-
-    // display a message if we have a winner
-    // if (winner) {
-    //     winLoseDrawMsg.innerHTML = displayEndMessage()
-    //     winLoseDrawMsg.classList.remove('.endGameMsgDisable')
-    // }
-    
-    
 }
 
 
-//lastColumnClicked [5, 0]
 function updateDomGameBoard() {
     
-    // check to find cells with class List contains appropriate row AND column
+    // check to find cells with class List containing appropriate row AND column
     let classNames = [`row${lastColumnClicked[0]}`, `column${lastColumnClicked[1]}`]
     let cellToColor = document.getElementsByClassName(`${classNames[0]} ${classNames[1]}`)
     console.log(cellToColor)
@@ -133,28 +116,46 @@ function updateDomGameBoard() {
 }
 
 
-function displayEndMessage() {
-    let msg = ''
-    if (winner == 'player1') {
-        return `Player 1 WINS!!`
-    } else if (winner == 'player2') {
-        return `Player 2 WINS!!`
-    } else if (winner == 'draw') {
-        return `DRAW! Play again?`
+function displayEndMessage(winner, draw) {
+    if (winner) {
+        
+        if (winner == 1) {
+            return `Player 1 WINS!!`
+        } else if (winner == 2) {
+            return `Player 2 WINS!!`
+        } else if (draw == true) {
+            return `DRAW! Play again?`
+        } else {
+            return false
+        }
     }
+
+}
+
+function checkDraw() {
+    // check if we have no -1, no winner
+    for (let i = 0; i < rowHeight; i++){
+        for (let j = 0; j < columnLength; j++){
+            if (gameBoard[i][j] != -1 & winner == false) {
+                draw = true
+                return 
+            }
+        }
+    }
+
+
 }
 
 
 function checkWinner() {
 
     // going to cache result so we save on time complexity
-    const rowHeight = 6
-    const columnLength = 7
     
     // check horizontallly all rows 
     for (let i = 0; i < rowHeight; i++) {
         for (let j = 0; j < columnLength - 3; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i][j + 1], gameBoard[i][j + 2], gameBoard[i][j + 3])) {
+                winner = true;
                 return gameBoard[i][j]
             }
         }
@@ -164,7 +165,7 @@ function checkWinner() {
     for (let i = 0; i < rowHeight - 3; i++) {
         for (let j = 0; j < columnLength; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i + 1][j], gameBoard[i + 2][j], gameBoard[i + 3][j])) {
-                console.log(gameBoard[i][j])
+                winner = true;
                 return gameBoard[i][j]
             }
         }
@@ -174,7 +175,7 @@ function checkWinner() {
     for (let i = 3; i < rowHeight; i++) {
         for (let j = 0; j < columnLength - 2; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i - 1][j + 1], gameBoard[i - 2][j + 2], gameBoard[i - 3][j + 3])) {
-                console.log(gameBoard[i][j])
+                winner = true;
                 return gameBoard[i][j]
             }
         }
@@ -184,16 +185,14 @@ function checkWinner() {
     for (let i = 0; i < rowHeight - 3; i++) {
         for (let j = 0; j < columnLength - 2; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i + 1][j + 1], gameBoard[i + 2][j + 2], gameBoard[i + 3][j + 3])) {
-                console.log(gameBoard[i][j])
-                return gameBoard[i][j]
+                winner = true;
+                return gameBoard[i][j];
             }
         }
 }
 
 
 }
-
-    
 
 
     // checkWinner() helper function
