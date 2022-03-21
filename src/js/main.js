@@ -152,7 +152,8 @@ function checkWinner() {
         for (let j = 0; j < columnLength - 3; j++) {
             if (check4InARow(gameBoard[i][j], gameBoard[i][j + 1], gameBoard[i][j + 2], gameBoard[i][j + 3])) {
                 winner = true;
-                return [gameBoard[i][j], gameBoard[i][j + 1], gameBoard[i][j + 2], gameBoard[i][j + 3]]
+                // returns 1 or 2 for winner, and an array of coordinates to later highlightWinner
+                return [gameBoard[i][j], `${i}${j}`, `${i}${j+1}`, `${i}${j+2}`, `${i}${j+3}`]
             }
         }
     }
@@ -196,9 +197,19 @@ function check4InARow (a, b, c, d) {
     return ((a != -1) && (a == b) && (b == c) && (c == d))
 };
     
-function highlightWinner([a, b, c, d]) {
-    //
+function highlightWinner(winningFour) {
+    //remove 1st element (winning player num)
+    winningFour.shift()
+
+    winningFour.forEach(cell => {
+        let winningCellClassNames = [`row${cell[0]}`, `column${cell[1]}`]  
+        let cellToHighlight = document.getElementsByClassName(`${winningCellClassNames[0]} ${winningCellClassNames[1]} `)
+        cellToHighlight[0].classList.remove('yellow')
+        cellToHighlight[0].classList.remove('red')
+        cellToHighlight[0].classList.add('winningHighlight')
+    })
 }
+
 
 
 function clearGameBoard() {
@@ -218,6 +229,7 @@ function clearGameBoard() {
         for (const cell of column) {
             cell.classList.remove('yellow');
             cell.classList.remove('red');
+            cell.classList.remove('winningHighlight')
         }
       }
 }
