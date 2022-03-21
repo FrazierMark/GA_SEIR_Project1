@@ -283,13 +283,38 @@ function updateTurn() {
 
 
 
-
-
-
-
 /**
  * WebGL / ThreeJS - background
  */
+
+
+
+
+
+//random color array
+const colors = new Float32Array(parameters.count * 3)
+for (let i = 0; i < count * 3; i++) { // Multiply by 3 cause, x, y, z
+    positions[i] = (Math.random() - 0.5) * 10 // Math.random() -0.5 creates value between -0.5 and +0.5
+    // create random red, green, blue value for each particle
+    colors[i] = Math.random()
+}
+
+
+
+// activate vertexColors
+particlesMaterial.vertexColors = true;
+particlesMaterial.map = particleTexture
+particlesMaterial.transparent = true;
+particlesMaterial.alphaMap = particleTexture
+particlesMaterial.depthWrite = false
+//  use blending to add the color of that pixel to the color of the pixel already drawn
+particlesMaterial.blending = THREE.AdditiveBlending;
+
+
+
+
+
+
 
 
 
@@ -330,7 +355,9 @@ const generateParticleFormation = () => {
          positions[i3 + 2] = (Math.random() - 0.5) * 3
      }
  
-     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    //Create the Three.js BufferAttribute and specify that each peice of information is composed of 3 values
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
 
     // Materials
      const material = new THREE.PointsMaterial({
@@ -346,33 +373,6 @@ const generateParticleFormation = () => {
 }
 generateParticleFormation()
 
-
-// random color's array
-// const colors = new Float32Array(parameters.count * 3)
-// for (let i = 0; i < count * 3; i++) { // Multiply by 3 cause, x, y, z
-//     positions[i] = (Math.random() - 0.5) * 10 // Math.random() -0.5 creates value between -0.5 and +0.5
-//     // create random red, green, blue value for each particle
-//     colors[i] = Math.random()
-// }
-
-// Create the Three.js BufferAttribute and specify that each peice of information is composed of 3 values
-// particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3)) 
-
-// particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
-
-// //Material
-// const particlesMaterial = new THREE.PointsMaterial({
-//     size: 0.1,
-//     sizeAttenuation: true
-// })
-// // activate vertexColors
-// particlesMaterial.vertexColors = true;
-// particlesMaterial.map = particleTexture
-// particlesMaterial.transparent = true;
-// particlesMaterial.alphaMap = particleTexture
-// particlesMaterial.depthWrite = false
-// //  use blending to add the color of that pixel to the color of the pixel already drawn
-// particlesMaterial.blending = THREE.AdditiveBlending;
 
 
 
