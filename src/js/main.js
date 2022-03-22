@@ -83,9 +83,9 @@ function init(e) {
     
     clearGameBoard()
 
-    // initialize 2D matrix of (-1)s
+    // initialize 2D matrix of (0)s
     for (let i = 0; i < 6; i++) {
-        gameBoard.push(new Array(7).fill(-1))
+        gameBoard.push(new Array(7).fill(0))
     }
 }
 
@@ -132,7 +132,7 @@ function displayEndMessage(winner, draw) {
         if (winner[0] == 1) {
             highlightWinner(winner)
             return `Player 1 WINS!!`
-        } else if (winner[0] == 2) {
+        } else if (winner[0] == -1) {
             highlightWinner(winner)
             return `Player 2 WINS!!`
         } 
@@ -151,7 +151,7 @@ function checkDraw() {
             checkNums.push(gameBoard[i][j])
         }
     }
-    if (!checkNums.includes(-1) && winner == false) {
+    if (!checkNums.includes(0) && winner == false) {
         draw = true
         return true
     } else {
@@ -165,7 +165,8 @@ function checkWinner() {
     // check horizontallly all rows 
     for (let i = 0; i < rowHeight; i++) {
         for (let j = 0; j < columnLength - 3; j++) {
-            if (check4InARow(gameBoard[i][j], gameBoard[i][j + 1], gameBoard[i][j + 2], gameBoard[i][j + 3])) {
+            if (gameBoard[i][j] + gameBoard[i][j + 1] + gameBoard[i][j + 2] + gameBoard[i][j + 3] == -4 ||
+                gameBoard[i][j] + gameBoard[i][j + 1] + gameBoard[i][j + 2] + gameBoard[i][j + 3] == 4) {
                 winner = true;
                 // returns 1 or 2 for winner, AND an array of coordinates to later highlightWinner()
                 return [gameBoard[i][j], `${i}${j}`, `${i}${j+1}`, `${i}${j+2}`, `${i}${j+3}`]
@@ -176,7 +177,8 @@ function checkWinner() {
     // check vertical, all columns
     for (let i = 0; i < rowHeight - 3; i++) {
         for (let j = 0; j < columnLength; j++) {
-            if (check4InARow(gameBoard[i][j], gameBoard[i + 1][j], gameBoard[i + 2][j], gameBoard[i + 3][j])) {
+            if (gameBoard[i][j] + gameBoard[i + 1][j] + gameBoard[i + 2][j] + gameBoard[i + 3][j] == -4 ||
+                gameBoard[i][j] + gameBoard[i + 1][j] + gameBoard[i + 2][j] + gameBoard[i + 3][j] == 4) {
                 winner = true;
                 return [gameBoard[i][j], `${i}${j}`, `${i+1}${j}`, `${i+2}${j}`, `${i+3}${j}`]
             }
@@ -186,7 +188,8 @@ function checkWinner() {
     // check diagonal, top-left to bottom-right 
     for (let i = 3; i < rowHeight; i++) {
         for (let j = 0; j < columnLength - 2; j++) {
-            if (check4InARow(gameBoard[i][j], gameBoard[i - 1][j + 1], gameBoard[i - 2][j + 2], gameBoard[i - 3][j + 3])) {
+            if (gameBoard[i][j] + gameBoard[i - 1][j + 1] + gameBoard[i - 2][j + 2] + gameBoard[i - 3][j + 3] == -4 ||
+                gameBoard[i][j] + gameBoard[i - 1][j + 1] + gameBoard[i - 2][j + 2] + gameBoard[i - 3][j + 3] == 4) {
                 winner = true;
                 return [gameBoard[i][j], `${i}${j}`, `${i-1}${j+1}`, `${i-2}${j+2}`, `${i-3}${j+3}`]
             }
@@ -196,7 +199,8 @@ function checkWinner() {
     // check diagonal, top-right to bottom-left
     for (let i = 0; i < rowHeight - 3; i++) {
         for (let j = 0; j < columnLength - 2; j++) {
-            if (check4InARow(gameBoard[i][j], gameBoard[i + 1][j + 1], gameBoard[i + 2][j + 2], gameBoard[i + 3][j + 3])) {
+            if (gameBoard[i][j] + gameBoard[i + 1][j + 1] + gameBoard[i + 2][j + 2] + gameBoard[i + 3][j + 3] == -4 ||
+                gameBoard[i][j] + gameBoard[i + 1][j + 1] + gameBoard[i + 2][j + 2] + gameBoard[i + 3][j + 3] == 4) {
                 winner = true;
                 return [gameBoard[i][j], `${i}${j}`, `${i+1}${j+1}`, `${i+2}${j+2}`, `${i+3}${j+3}`];
             }
@@ -206,12 +210,6 @@ function checkWinner() {
 }
 
 
-    // checkWinner() helper function
-function check4InARow (cell1, cell2, cell3, cell4) {
-    // Check first cell is not empty, and matching cells
-    return ((cell1 != -1) && (cell1 == cell2) && (cell2 == cell3) && (cell3 == cell4))
-};
-    
 function highlightWinner(winningFour) {
     //remove 1st element (winning player num)
     winningFour.shift()
@@ -250,7 +248,7 @@ function clearGameBoard() {
 // check if avaialable space in column
 function getAvailableSlot(columnIdxClicked) {
     for (let i = 5; i > -1; i--){
-        if (gameBoard[i][columnIdxClicked] == -1) {
+        if (gameBoard[i][columnIdxClicked] == 0) {
             return [i, columnIdxClicked]
         }
     } 
@@ -273,7 +271,7 @@ function checkPlayerTurn() {
     if (player1_Turn == true) {
         return 1 // red
     } else {
-        return 2 // yellow
+        return -1 // yellow
     }
 }
 
