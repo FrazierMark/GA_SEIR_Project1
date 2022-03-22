@@ -145,7 +145,7 @@ body {
     flex-wrap: wrap;
     color: white;
     position: absolute;
-    border-radius: 0%;
+    border-radius: 2%;
     text-align: center;
     left: 50%px;
     top: 40%;
@@ -153,6 +153,26 @@ body {
     box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 .4em #0fa;
   }
 
+  .music {
+    grid-row: 3;
+    grid-column: 2;
+    margin-top: 0px;
+    align-items: flex-end;
+    font-family: 'abnes';
+    padding: 10px;
+    border-radius: 50%;
+    cursor:cell;
+    color: #f2f8f4;
+    overflow: hidden;
+    background: linear-gradient(360deg, transparent, #67ccae);
+    box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 .4em #0fa;
+  }
+
+  img{
+    height: 40px;
+    width: 40px
+  }
+ 
   .yellow {
     background: linear-gradient(360deg, transparent, #ffd900 85%);
   }

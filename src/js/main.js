@@ -194,9 +194,9 @@ function checkWinner() {
 
 
     // checkWinner() helper function
-function check4InARow (a, b, c, d) {
+function check4InARow (cell1, cell2, cell3, cell4) {
     // Check first cell is not empty, and matching cells
-    return ((a != -1) && (a == b) && (b == c) && (c == d))
+    return ((cell1 != -1) && (cell1 == cell2) && (cell2 == cell3) && (cell3 == cell4))
 };
     
 function highlightWinner(winningFour) {
@@ -308,10 +308,10 @@ const parameters = {
     count: 66000,
     size: 0.022,
     radius: 5,
-    forks: 6,
+    forks: 8,
     curve: 1,
     randomness: 1.2,
-    randomPower: 5,
+    randomPower: 8,
     innerColor: '#00ffb3',
     outerColor: '#f1f514'
 
