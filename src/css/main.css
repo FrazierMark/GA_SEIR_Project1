@@ -154,10 +154,10 @@ body {
   }
 
   .music {
-    grid-row: 3;
+    grid-row: 1;
     grid-column: 2;
     margin-top: 0px;
-    align-items: flex-end;
+    margin-left: 650px;
     font-family: 'abnes';
     padding: 10px;
     border-radius: 50%;
@@ -169,8 +169,8 @@ body {
   }
 
   img{
-    height: 40px;
-    width: 40px
+    height: 30px;
+    width: 30px
   }
  
   .yellow {
@@ -209,6 +209,9 @@ body {
       display: none;
     }
     .player2_token{
+      display: none;
+    }
+    .music{
       display: none;
     }
     .board_grid {

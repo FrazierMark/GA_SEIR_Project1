@@ -1,9 +1,11 @@
-import '../css/main.css'
+import '../css/main.css';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import * as dat from 'lil-gui'
-import vShader from '../../public/shaders/vShader.glsl'
-import fShader from '../../public/shaders/fShader.glsl'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import * as dat from 'lil-gui';
+import vShader from '../../public/shaders/vShader.glsl';
+import fShader from '../../public/shaders/fShader.glsl';
+import soundTrack from '../../public/audio/synth1.mp3'
+
 
 // calls the init function on load
 document.addEventListener('DOMContentLoaded', function() {
@@ -12,10 +14,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+// Music and Sound FX
+
+
+
+
+
+
+
 /*----- DOM Elements -----*/
 const player1_TurnToken = document.querySelector(".player1_token")
 const player2_TurnToken = document.querySelector(".player2_token")
 
+const musicBtn = document.querySelector('.music')
 const startResetBtn = document.querySelector(".start_reset")
 const winLoseDrawMsg = document.querySelector('.win_lose_draw')
 
@@ -41,20 +52,22 @@ let gameBoard = [];
 //     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[6]
 // ]
 
-let winnerCheckCache = {};
-
 let winner = false;
 let draw = false;
 
 let player1_Turn = true;
 let player2_Turn = false;
 let lastColumnClicked = [];
+let soundTrackPlaying = false
+let music = new Audio(soundTrack);
+    music.loop = true
 const rowHeight = 6
 const columnLength = 7
 
 
 /*-----Event Listeners-----*/
 startResetBtn.addEventListener('click', init);
+musicBtn.addEventListener('click', playMusic);
 
 for (const column of allColumns) {
     for (const cell of column) {
@@ -279,6 +292,28 @@ function updateTurn() {
         player1_TurnToken.classList.add('red')
     }
 }
+
+
+function playMusic(e) {
+    if (soundTrackPlaying == false) {
+        console.log("playing??")
+        
+        music.load()
+        music.play()
+        .then(() => {
+            soundTrackPlaying = true
+        }).catch(error => {
+            console.log(error)
+        })
+    } else if (soundTrackPlaying == true) {
+        music.pause()
+        soundTrackPlaying = false
+    }
+}
+
+
+
+
 
 
 /**

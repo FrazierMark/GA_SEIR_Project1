@@ -77,6 +77,16 @@ module.exports = {
                     filename: 'assets/fonts/[hash][ext]'
                 }
                 },
+             // Audio
+             {
+                test: /\.(mp3)$/,
+                type: 'asset/resource',
+                generator:
+                {
+                    filename: 'assets/audio/[hash][ext]'
+                }
+            },
+
             // Shaders
             {
                 test: /\.(glsl|vs|fs|vert|frag)$/,
