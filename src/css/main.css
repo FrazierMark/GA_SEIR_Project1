@@ -27,6 +27,19 @@ body {
     align-content: center;
     align-items: flex-start;
     justify-items: center;
+    animation: fadeInAnimation ease 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+
+@keyframes fadeInAnimation {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+   }
 }
 
 
@@ -157,12 +170,12 @@ body {
   .music {
     grid-row: 1;
     grid-column: 2;
-    margin-top: -10px;
+    margin-top: -7px;
     margin-left: 650px;
     font-family: 'abnes';
     padding: 10px;
     border-radius: 50%;
-    cursor:cell;
+    cursor: cell;
     color: #f2f8f4;
     overflow: hidden;
     background: linear-gradient(360deg, transparent, #67ccae);

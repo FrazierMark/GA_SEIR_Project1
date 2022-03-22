@@ -382,10 +382,10 @@ const particleTexture = textureLoader.load('/textures/particles/2.png')
 
 //Particle parameters
 const parameters = {
-    count: 80000,
+    count: 100000,
     size: 0.022,
     radius: 5,
-    forks: 9,
+    forks: 13,
     curve: 1,
     randomness: 1.2,
     randomPower: 8,
@@ -516,7 +516,7 @@ window.addEventListener('resize', () => {
 const camera = new THREE.PerspectiveCamera(75, windowSize.width / windowSize.height, 0.1, 100)
 camera.position.x = 0
 camera.position.y = 0
-camera.position.z = 0
+camera.position.z = 4.517
 scene.add(camera)
 
 // Controls
@@ -539,7 +539,7 @@ particleParameters.addColor(parameters, 'outerColor').onFinishChange(generatePar
 const cameraFolder = gui.addFolder('Camera')
 cameraFolder.add(camera.position, 'x').min(0).max(15).step(0.001)
 cameraFolder.add(camera.position, 'y').min(0).max(15).step(0.001)
-cameraFolder.add(camera.position, 'z').min(0).max(15).step(0.001)
+cameraFolder.add(camera.position, 'z').min(0.01).max(15).step(0.001)
 cameraFolder.close()
 
 
