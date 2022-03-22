@@ -5,21 +5,16 @@ import * as dat from 'lil-gui';
 import vShader from '../../public/shaders/vShader.glsl';
 import fShader from '../../public/shaders/fShader.glsl';
 import soundTrack from '../../public/audio/synth1.mp3'
+import redTrack from '../../public/audio/redTrack.mp3';
+import yellowTrack from '../../public/audio/yellowTrack.mp3';
+import winTone from '../../public/audio/winTone.mp3';
+import drawTone from '../../public/audio/drawTone.mp3';
 
 
-// calls the init function on load
+// Calls init() on load
 document.addEventListener('DOMContentLoaded', function() {
     init();
 }, false);
-
-
-
-// Music and Sound FX
-
-
-
-
-
 
 
 /*----- DOM Elements -----*/
@@ -40,16 +35,16 @@ const column6 = document.getElementsByClassName('column6')
 
 const allColumns = [column0, column1, column2, column3, column4, column5, column6]
 
-/*----- Constants -----*/
+/*----- Variables -----*/
 let gameBoard = [];
 
 // [
-//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[0]
-//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[1]
-//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[3]
-//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[4]
-//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[5]
-//     [-1,-1,-1,-1,-1,-1,-1] = gameBoard[6]
+//     [0,0,0,0,0,0,0] = gameBoard[0]
+//     [0,0,0,0,0,0,0] = gameBoard[1]
+//     [0,0,0,0,0,0,0] = gameBoard[3]
+//     [0,0,0,0,0,0,0] = gameBoard[4]
+//     [0,0,0,0,0,0,0] = gameBoard[5]
+//     [0,0,0,0,0,0,0] = gameBoard[6]
 // ]
 
 let winner = false;
@@ -57,12 +52,28 @@ let draw = false;
 
 let player1_Turn = true;
 let player2_Turn = false;
-let lastColumnClicked = [];
-let soundTrackPlaying = false
-let music = new Audio(soundTrack);
-    music.loop = true
+
 const rowHeight = 6
 const columnLength = 7
+
+let lastColumnClicked = [];
+
+let soundTrackPlaying = false
+let music = new Audio(soundTrack);
+music.loop = true
+music.volume = 0.7
+let yellowSound = new Audio(yellowTrack)
+yellowSound.loop = false
+yellowSound.volume = 0.3
+let redSound = new Audio(redTrack)
+redSound.loop = false
+redSound.volume = 0.3    
+let winSound = new Audio(winTone)
+winSound.loop = false
+winSound.volume = 0.5
+let drawSound = new Audio(drawTone)
+drawSound.loop = false
+drawSound.volume = 0.5
 
 
 /*-----Event Listeners-----*/
@@ -76,14 +87,13 @@ for (const column of allColumns) {
   }
 
 
-// Set initial state variables - const
+// Set initial state variables 
 function init(e) {
     startResetBtn.innerText = 'Restart Game?'
     
-    
     clearGameBoard()
 
-    // initialize 2D matrix of (0)s
+    // Initialize 2D matrix of (0)s
     for (let i = 0; i < 6; i++) {
         gameBoard.push(new Array(7).fill(0))
     }
@@ -103,13 +113,11 @@ function dropToken(e) {
 
 function render() {
     updateDomGameBoard()
-
     updateTurn()
-   
     winLoseDrawMsg.innerText = displayEndMessage(checkWinner(), checkDraw())
-    
     if (winner == true || draw == true) {
         winLoseDrawMsg.classList.remove('endGameMsgDisable')
+        playSoundFX()
         startResetBtn.innerText = `Play again?`
     }
 }
@@ -124,6 +132,7 @@ function updateDomGameBoard() {
     } else {
         cellToColor[0].classList.add('yellow')
     }
+    playSoundFX()
 }
 
 
@@ -143,7 +152,7 @@ function displayEndMessage(winner, draw) {
 
 
 function checkDraw() {
-    // check if we have no -1s in gameBoard & no winner
+    // check if we have no 0s in gameBoard && no winner
     let checkNums = []
 
     for (let i = rowHeight - 1; i > -1; i--){
@@ -161,7 +170,6 @@ function checkDraw() {
 
 
 function checkWinner() {
-    
     // check horizontallly all rows 
     for (let i = 0; i < rowHeight; i++) {
         for (let j = 0; j < columnLength - 3; j++) {
@@ -174,7 +182,7 @@ function checkWinner() {
         }
     }
 
-    // check vertical, all columns
+    // check vertical all columns
     for (let i = 0; i < rowHeight - 3; i++) {
         for (let j = 0; j < columnLength; j++) {
             if (gameBoard[i][j] + gameBoard[i + 1][j] + gameBoard[i + 2][j] + gameBoard[i + 3][j] == -4 ||
@@ -226,14 +234,11 @@ function clearGameBoard() {
     winner = false;
     draw = false;
     lastColumnClicked = [];
-
     if (!winLoseDrawMsg.classList.contains('endGameMsgDisable')) {
         winLoseDrawMsg.classList.add('endGameMsgDisable')
     }
-
     startResetBtn.innerText = `Restart Game?`
     
-
     for (const column of allColumns) {
         for (const cell of column) {
             cell.classList.remove('yellow');
@@ -242,7 +247,6 @@ function clearGameBoard() {
         }
       }
 }
-
 
     
 // check if avaialable space in column
@@ -310,6 +314,42 @@ function playMusic(e) {
 }
 
 
+function playSoundFX(e) {
+    if (player1_Turn == true && winner == false) {
+        redSound.load()
+        redSound.play()
+            .then(() => {
+                // sound fx played
+            }).catch(error => {
+                console.log(error)
+            })
+    } else if (player2_Turn == true && winner == false) {
+        yellowSound.load()
+        yellowSound.play()
+            .then(() => {
+                // sound fx played
+            }).catch(error => {
+                console.log(error)
+            })
+    } else if (winner == true) {
+        winSound.load()
+        winSound.play()
+            .then(() => {
+                // sound fx played
+            }).catch(error => {
+                console.log(error)
+            })
+    }
+    else if (draw == true) {
+        drawSound.load()
+        drawSound.play()
+            .then(() => {
+                // sound fx played
+            }).catch(error => {
+                console.log(error)
+            })
+    }
+}
 
 
 
