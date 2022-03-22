@@ -37,7 +37,7 @@ const allColumns = [column0, column1, column2, column3, column4, column5, column
 
 /*----- Variables -----*/
 let gameBoard = [];
-
+// 2D Matrizx - 6 x 7
 // [
 //     [0,0,0,0,0,0,0] = gameBoard[0]
 //     [0,0,0,0,0,0,0] = gameBoard[1]
@@ -296,10 +296,9 @@ function updateTurn() {
 }
 
 
-function playMusic(e) {
+function playMusic() {
     if (soundTrackPlaying == false) {
         console.log("playing??")
-        
         music.load()
         music.play()
         .then(() => {
@@ -314,7 +313,7 @@ function playMusic(e) {
 }
 
 
-function playSoundFX(e) {
+function playSoundFX() {
     if (player1_Turn == true && winner == false) {
         redSound.load()
         redSound.play()
@@ -354,8 +353,13 @@ function playSoundFX(e) {
 
 
 
+
+
+
+
+
 /**
- * WebGL / ThreeJS - background
+ * WebGL / ThreeJS - Background
  */
 
 // Some of this is derived from Bruno Simon's 3JS Journey, 
@@ -378,10 +382,10 @@ const particleTexture = textureLoader.load('/textures/particles/2.png')
 
 //Particle parameters
 const parameters = {
-    count: 66000,
+    count: 80000,
     size: 0.022,
     radius: 5,
-    forks: 8,
+    forks: 9,
     curve: 1,
     randomness: 1.2,
     randomPower: 8,
@@ -436,16 +440,17 @@ const generateParticleFormation = () => {
         const randomY = Math.pow(Math.random(), parameters.randomPower) * (Math.random() < 0.5 ? 1 : - 1) * parameters.randomness * radius
         const randomZ = Math.pow(Math.random(), parameters.randomPower) * (Math.random() < 0.5 ? 1 : - 1) * parameters.randomness * radius
 
-        positions[i3    ] = Math.cos(forkAngle) * radius // position on x
-        positions[i3 + 1] = 0 //position on y
-        positions[i3 + 2] = Math.sin(forkAngle) * radius // position on z
+        positions[i3    ] = Math.cos(forkAngle) * radius * -curveAngle // position on x
+        positions[i3 + 1] = Math.sin(forkAngle) * 2 // position on z
+        positions[i3 + 2] = Math.sin(forkAngle) * radius * curveAngle // position on z
     
         randomness[i3    ] = randomX
         randomness[i3 + 1] = randomY
-        randomness[i3 + 2] = randomZ
+         randomness[i3 + 2] = randomZ
+         
          // Color
          const mixedInnerOuter = innerColor.clone()
-         // lerp() gets the delta value from innerColor to outerColor (0 and 1)
+         // lerp() gets the delta value from innerColor to outerColor (between 0 and 1)
          mixedInnerOuter.lerp(outerColor, radius / parameters.radius)
 
         colors[i3] = mixedInnerOuter.r
@@ -463,19 +468,7 @@ const generateParticleFormation = () => {
     geometry.setAttribute('aRandomness', new THREE.BufferAttribute(randomness, 3))
     
     
-    // Materials
-    // material = new THREE.PointsMaterial({
-    //     size: parameters.size,
-    //     sizeAttenuation: true,
-    //     depthWrite: false,
-    //     vertexColors: true,
-    //     map: particleTexture,
-    //     transparent: true,
-    //     alphaMap: particleTexture,
-    //     //  use blending to add the color of a particle to the color of another
-    //     blending: THREE.AdditiveBlending
-    //  })
-
+ 
     // Using Shader Material
     material = new THREE.ShaderMaterial({
         depthWrite: false,
@@ -484,7 +477,7 @@ const generateParticleFormation = () => {
         uniforms:
         {
             uTime: { value: 0 },
-            uSize: { value: 25 * renderer.getPixelRatio() }
+            uSize: { value: 20 * renderer.getPixelRatio() }
         },    
         vertexShader: vShader,
         fragmentShader: fShader
@@ -523,7 +516,7 @@ window.addEventListener('resize', () => {
 const camera = new THREE.PerspectiveCamera(75, windowSize.width / windowSize.height, 0.1, 100)
 camera.position.x = 0
 camera.position.y = 0
-camera.position.z = 3
+camera.position.z = 0
 scene.add(camera)
 
 // Controls
@@ -535,19 +528,18 @@ controls.enableDamping = true
 // Tweaking parameters in GUI for count and size
 const particleParameters = gui.addFolder('Particle Parameters')
 particleParameters.close();
-particleParameters.add(parameters, 'count').min(100).max(100000).step(100).onFinishChange(generateParticleFormation);
-particleParameters.add(parameters, 'size').min(0.001).max(1.1).step(0.001).onFinishChange(generateParticleFormation);
+particleParameters.add(parameters, 'count').min(100).max(1000000).step(100).onFinishChange(generateParticleFormation);
 particleParameters.add(parameters, 'radius').min(0.01).max(22).step(0.01).onFinishChange(generateParticleFormation);
-particleParameters.add(parameters, 'forks').min(2).max(20).step(1).onFinishChange(generateParticleFormation);
 particleParameters.add(parameters, 'curve').min(- 5).max(5).step(0.001).onFinishChange(generateParticleFormation);
-particleParameters.add(parameters, 'randomness').min(0).max(2).step(0.001).onFinishChange(generateParticleFormation);
+particleParameters.add(parameters, 'forks').min( 1).max(20).step(1.0).onFinishChange(generateParticleFormation);
+particleParameters.add(parameters, 'randomness').min(0).max(10).step(0.001).onFinishChange(generateParticleFormation);
 particleParameters.add(parameters, 'randomPower').min(1).max(10).step(0.001).onFinishChange(generateParticleFormation);
 particleParameters.addColor(parameters, 'innerColor').onFinishChange(generateParticleFormation)
 particleParameters.addColor(parameters, 'outerColor').onFinishChange(generateParticleFormation)
 const cameraFolder = gui.addFolder('Camera')
-cameraFolder.add(camera.position, 'x', 0, 10)
-cameraFolder.add(camera.position, 'y', 0, 10)
-cameraFolder.add(camera.position, 'z', 0, 10)
+cameraFolder.add(camera.position, 'x').min(0).max(15).step(0.001)
+cameraFolder.add(camera.position, 'y').min(0).max(15).step(0.001)
+cameraFolder.add(camera.position, 'z').min(0).max(15).step(0.001)
 cameraFolder.close()
 
 
@@ -570,28 +562,7 @@ const clock = new THREE.Clock()
 
 const frame = () =>
 {
-    // const elapsedTime = clock.getElapsedTime()
-
-    // // Update camera and canvas
-    // controls.update()
-
-    // // Update particles
-    // // Wave-like movement of particles using sin()
-    // for (let i = 0; i < parameters.count; i++) {
-    //  const i3 = i * 3
-    //  const x = geometry.attributes.position.array[i3]
-    //  geometry.attributes.position.array[i3 + 1] = elapsedTime + x * Math.PI
     
-    // }
-    // //three.js has to be notified that the geometry changed
-    // geometry.attributes.position.needsUpdate = true
-
-    // // Render
-    // renderer.render(scene, camera)
-
-    // // Call tick again on the next frame
-    // window.requestAnimationFrame(frame)
-
 
     const elapsedTime = clock.getElapsedTime()
 

@@ -34,6 +34,7 @@ body {
     grid-row: 1;
     grid-column: 2;
     font-family: 'abnes';
+    letter-spacing: .1px;
     margin-bottom: 50px;
     font-size: 50px;
 }
@@ -156,7 +157,7 @@ body {
   .music {
     grid-row: 1;
     grid-column: 2;
-    margin-top: 0px;
+    margin-top: -10px;
     margin-left: 650px;
     font-family: 'abnes';
     padding: 10px;
