@@ -2,6 +2,8 @@ import '../css/main.css'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
+import vShader from '../../public/shaders/vShader.glsl'
+import fShader from '../../public/shaders/fShader.glsl'
 
 // calls the init function on load
 document.addEventListener('DOMContentLoaded', function() {
@@ -287,15 +289,14 @@ function updateTurn() {
  * WebGL / ThreeJS - background
  */
 
-
-
-
+// Derived from Bruno Simon's 3JS Journey, 
+// Source: https://threejs-journey.com/
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
 // // Debugging GUI
-const gui = new dat.GUI({ width: 100 })
+const gui = new dat.GUI({ width: 300 })
 
 // Scene
 const scene = new THREE.Scene()
@@ -308,13 +309,15 @@ const particleTexture = textureLoader.load('/textures/particles/2.png')
 
 //Particle parameters
 const parameters = {
-    count: 10000,
-    size: 0.12,
+    count: 66000,
+    size: 0.022,
     radius: 5,
-    forks: 3,
+    forks: 6,
     curve: 1,
-    randomness: 0.2,
-    randomPower: 3
+    randomness: 1.2,
+    randomPower: 5,
+    innerColor: '#11ff00',
+    outerColor: '#0065d1'
 
 }
 
@@ -341,12 +344,18 @@ const generateParticleFormation = () => {
     // Array of x,y,z for vertex positions
     const positions = new Float32Array(parameters.count * 3)
     const colors = new Float32Array(parameters.count * 3)
+    const randomness = new Float32Array(parameters.count * 3)
+    const innerColor = new THREE.Color(parameters.innerColor)
+    const outerColor = new THREE.Color(parameters.outerColor)
+    const scales = new Float32Array(parameters.count * 1)
+
  
      for(let i = 0; i < parameters.count; i++)
      {
         //accesses every 3 elements in array
         const i3 = i * 3
 
+        // Particle position calculations
         const radius = Math.random() * parameters.radius
         // every 3rd value, [0, .33, .66 | 0, .33, .66 | 0, .33, .66]...
         // Math.PI * 2 == 1 full circle
@@ -354,57 +363,83 @@ const generateParticleFormation = () => {
         // further the particle is from center will increase the curveAngle
         const curveAngle = radius * parameters.curve
 
+         
         //create random (x,y,z) positions, (multiply by -0.5 to get values between -.5 and 0.5)
-        const randomX = (Math.random() - 0.5) * parameters.randomness * radius
-        const randomY = (Math.random() - 0.5) * parameters.randomness * radius
-        const randomZ = (Math.random() - 0.5) * parameters.randomness * radius
+        const randomX = Math.pow(Math.random(), parameters.randomPower) * (Math.random() < 0.5 ? 1 : - 1) * parameters.randomness * radius
+        const randomY = Math.pow(Math.random(), parameters.randomPower) * (Math.random() < 0.5 ? 1 : - 1) * parameters.randomness * radius
+        const randomZ = Math.pow(Math.random(), parameters.randomPower) * (Math.random() < 0.5 ? 1 : - 1) * parameters.randomness * radius
 
-        positions[i3] = Math.cos(forkAngle + curveAngle) * radius + randomX  // position on x-axis
-        positions[i3 + 1] = randomY // position on y-axis
-        positions[i3 + 2] = Math.sin(forkAngle + curveAngle) * radius + randomZ // position on z-axis
-        
-        colors[i3] = Math.random()
-        colors[i3 + 1] = Math.random()
-        colors[i3 + 2] = Math.random()
+        positions[i3    ] = Math.cos(forkAngle) * radius // position on x
+        positions[i3 + 1] = 0 //position on y
+        positions[i3 + 2] = Math.sin(forkAngle) * radius // position on z
+    
+        randomness[i3    ] = randomX
+        randomness[i3 + 1] = randomY
+        randomness[i3 + 2] = randomZ
+         // Color
+         const mixedInnerOuter = innerColor.clone()
+         // lerp() gets the delta value from innerColor to outerColor (0 and 1)
+         mixedInnerOuter.lerp(outerColor, radius / parameters.radius)
 
+        colors[i3] = mixedInnerOuter.r
+        colors[i3 + 1] = mixedInnerOuter.g
+        colors[i3 + 2] = mixedInnerOuter.b
+
+        // Scale
+         scales[i] = Math.random()
      }
  
     //Create the Three.js BufferAttribute and specify that each peice of information is composed of 3 values
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+    geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1))
+    geometry.setAttribute('aRandomness', new THREE.BufferAttribute(randomness, 3))
     
     
     // Materials
-    material = new THREE.PointsMaterial({
-        size: parameters.size,
-        sizeAttenuation: true,
+    // material = new THREE.PointsMaterial({
+    //     size: parameters.size,
+    //     sizeAttenuation: true,
+    //     depthWrite: false,
+    //     vertexColors: true,
+    //     map: particleTexture,
+    //     transparent: true,
+    //     alphaMap: particleTexture,
+    //     //  use blending to add the color of a particle to the color of another
+    //     blending: THREE.AdditiveBlending
+    //  })
+
+    // Using Shader Material
+    material = new THREE.ShaderMaterial({
         depthWrite: false,
+        blending: THREE.AdditiveBlending,
         vertexColors: true,
-        map: particleTexture,
-        transparent: true,
-        alphaMap: particleTexture,
-        
-        //  use blending to add the color of that pixel to the color of the pixel already drawn
-        blending: THREE.AdditiveBlending
-     })
-    
+        uniforms:
+        {
+            uTime: { value: 0 },
+            uSize: { value: 30 * renderer.getPixelRatio() }
+        },    
+        vertexShader: vShader,
+        fragmentShader: fShader
+    })
     
     particles = new THREE.Points(geometry, material)
     scene.add(particles)
 
 }
 
-generateParticleFormation()
 
 
 // Tweaking parameters in GUI for count and size
-gui.add(parameters, 'count').min(100).max(1000000).step(100).onFinishChange(generateParticleFormation);
+gui.add(parameters, 'count').min(100).max(100000).step(100).onFinishChange(generateParticleFormation);
 gui.add(parameters, 'size').min(0.001).max(1.1).step(0.001).onFinishChange(generateParticleFormation);
 gui.add(parameters, 'radius').min(0.01).max(22).step(0.01).onFinishChange(generateParticleFormation);
 gui.add(parameters, 'forks').min(2).max(20).step(1).onFinishChange(generateParticleFormation);
 gui.add(parameters, 'curve').min(- 5).max(5).step(0.001).onFinishChange(generateParticleFormation);
 gui.add(parameters, 'randomness').min(0).max(2).step(0.001).onFinishChange(generateParticleFormation);
 gui.add(parameters, 'randomPower').min(1).max(10).step(0.001).onFinishChange(generateParticleFormation);
+gui.addColor(parameters, 'innerColor').onFinishChange(generateParticleFormation)
+gui.addColor(parameters, 'outerColor').onFinishChange(generateParticleFormation)
 
 
 
@@ -442,6 +477,8 @@ scene.add(camera)
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
+
+
 // Renderer (WebGl)
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas
@@ -449,38 +486,54 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(windowSize.width, windowSize.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-/**
- * Animate
- */
+
+
+generateParticleFormation()
+
+
+// Update every frame
 const clock = new THREE.Clock()
 
-const tick = () =>
+const frame = () =>
 {
+    // const elapsedTime = clock.getElapsedTime()
+
+    // // Update camera and canvas
+    // controls.update()
+
+    // // Update particles
+    // // Wave-like movement of particles using sin()
+    // for (let i = 0; i < parameters.count; i++) {
+    //  const i3 = i * 3
+    //  const x = geometry.attributes.position.array[i3]
+    //  geometry.attributes.position.array[i3 + 1] = elapsedTime + x * Math.PI
+    
+    // }
+    // //three.js has to be notified that the geometry changed
+    // geometry.attributes.position.needsUpdate = true
+
+    // // Render
+    // renderer.render(scene, camera)
+
+    // // Call tick again on the next frame
+    // window.requestAnimationFrame(frame)
+
+
     const elapsedTime = clock.getElapsedTime()
+
+    // Update material
+    material.uniforms.uTime.value = elapsedTime
 
     // Update controls
     controls.update()
-
-    //Update particles
-    // particles.rotation.y = elapsedTime * 0.2
-    // Wave-like movement of particles
-    // for (let i = 0; i < count; i++) {
-    //     const i3 = i * 3
-
-    //     const x = particlesGeometry.attributes.position.array[i3]
-    //     particlesGeometry.attributes.position.array[i3 + 1] = Math.sin(elapsedTime + x)
-    //     // The y coordinate can be access in the array at the index i3 + 1:
-    //    // particlesGeometry.attributes.position.array[i3 + 1] = Math.sin(elapsedTime)
-    // }
-    // // The problem is that Three.js has to be notified that the geometry changed
-    // particlesGeometry.attributes.position.needsUpdate = true 
-
 
     // Render
     renderer.render(scene, camera)
 
     // Call tick again on the next frame
-    window.requestAnimationFrame(tick)
+    window.requestAnimationFrame(frame)
+
+
 }
 
-    tick()
+    frame()
