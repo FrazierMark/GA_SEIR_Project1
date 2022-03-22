@@ -283,13 +283,11 @@ function updateTurn() {
 
 
 
-
-
 /**
  * WebGL / ThreeJS - background
  */
 
-// Derived from Bruno Simon's 3JS Journey, 
+// Some of this is derived from Bruno Simon's 3JS Journey, 
 // Source: https://threejs-journey.com/
 
 // Canvas
@@ -316,8 +314,8 @@ const parameters = {
     curve: 1,
     randomness: 1.2,
     randomPower: 5,
-    innerColor: '#11ff00',
-    outerColor: '#0065d1'
+    innerColor: '#00ffb3',
+    outerColor: '#f1f514'
 
 }
 
@@ -336,8 +334,6 @@ const generateParticleFormation = () => {
         scene.remove(particles)
     }
 
-   
-    
     // Geometry
     geometry = new THREE.BufferGeometry()
 
@@ -417,7 +413,7 @@ const generateParticleFormation = () => {
         uniforms:
         {
             uTime: { value: 0 },
-            uSize: { value: 30 * renderer.getPixelRatio() }
+            uSize: { value: 25 * renderer.getPixelRatio() }
         },    
         vertexShader: vShader,
         fragmentShader: fShader
@@ -427,20 +423,6 @@ const generateParticleFormation = () => {
     scene.add(particles)
 
 }
-
-
-
-// Tweaking parameters in GUI for count and size
-gui.add(parameters, 'count').min(100).max(100000).step(100).onFinishChange(generateParticleFormation);
-gui.add(parameters, 'size').min(0.001).max(1.1).step(0.001).onFinishChange(generateParticleFormation);
-gui.add(parameters, 'radius').min(0.01).max(22).step(0.01).onFinishChange(generateParticleFormation);
-gui.add(parameters, 'forks').min(2).max(20).step(1).onFinishChange(generateParticleFormation);
-gui.add(parameters, 'curve').min(- 5).max(5).step(0.001).onFinishChange(generateParticleFormation);
-gui.add(parameters, 'randomness').min(0).max(2).step(0.001).onFinishChange(generateParticleFormation);
-gui.add(parameters, 'randomPower').min(1).max(10).step(0.001).onFinishChange(generateParticleFormation);
-gui.addColor(parameters, 'innerColor').onFinishChange(generateParticleFormation)
-gui.addColor(parameters, 'outerColor').onFinishChange(generateParticleFormation)
-
 
 
 // Aspect Window ratio
@@ -468,14 +450,35 @@ window.addEventListener('resize', () => {
 
 //Camera
 const camera = new THREE.PerspectiveCamera(75, windowSize.width / windowSize.height, 0.1, 100)
-camera.position.x = 3
-camera.position.y = 3
+camera.position.x = 0
+camera.position.y = 0
 camera.position.z = 3
 scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
+
+
+
+// Tweaking parameters in GUI for count and size
+const particleParameters = gui.addFolder('Particle Parameters')
+particleParameters.close();
+particleParameters.add(parameters, 'count').min(100).max(100000).step(100).onFinishChange(generateParticleFormation);
+particleParameters.add(parameters, 'size').min(0.001).max(1.1).step(0.001).onFinishChange(generateParticleFormation);
+particleParameters.add(parameters, 'radius').min(0.01).max(22).step(0.01).onFinishChange(generateParticleFormation);
+particleParameters.add(parameters, 'forks').min(2).max(20).step(1).onFinishChange(generateParticleFormation);
+particleParameters.add(parameters, 'curve').min(- 5).max(5).step(0.001).onFinishChange(generateParticleFormation);
+particleParameters.add(parameters, 'randomness').min(0).max(2).step(0.001).onFinishChange(generateParticleFormation);
+particleParameters.add(parameters, 'randomPower').min(1).max(10).step(0.001).onFinishChange(generateParticleFormation);
+particleParameters.addColor(parameters, 'innerColor').onFinishChange(generateParticleFormation)
+particleParameters.addColor(parameters, 'outerColor').onFinishChange(generateParticleFormation)
+const cameraFolder = gui.addFolder('Camera')
+cameraFolder.add(camera.position, 'x', 0, 10)
+cameraFolder.add(camera.position, 'y', 0, 10)
+cameraFolder.add(camera.position, 'z', 0, 10)
+cameraFolder.open()
+
 
 
 
@@ -522,7 +525,7 @@ const frame = () =>
     const elapsedTime = clock.getElapsedTime()
 
     // Update material
-    material.uniforms.uTime.value = elapsedTime
+    material.uniforms.uTime.value = elapsedTime * 0.2
 
     // Update controls
     controls.update()
