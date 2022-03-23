@@ -12,7 +12,7 @@ import drawTone from '../../public/audio/drawTone.mp3';
 
 
 // Calls init() on load
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     init();
 }, false);
 
@@ -67,7 +67,7 @@ yellowSound.loop = false
 yellowSound.volume = 0.3
 let redSound = new Audio(redTrack)
 redSound.loop = false
-redSound.volume = 0.3    
+redSound.volume = 0.3
 let winSound = new Audio(winTone)
 winSound.loop = false
 winSound.volume = 0.5
@@ -83,9 +83,9 @@ musicBtn.addEventListener('click', playMusic);
 // Adds eventListener on each cell
 for (const column of allColumns) {
     for (const cell of column) {
-      cell.addEventListener('click', dropToken);
+        cell.addEventListener('click', dropToken);
     }
-  }
+}
 
 
 // Sets initial state variables 
@@ -109,8 +109,8 @@ function dropToken(e) {
     const columnIdxClicked = cellIdx[1]
     // Returns an Index of lowest available slot if any
     let indexToUpdate = getAvailableSlot(columnIdxClicked)
-     // checkPlayerTurn() returns either 1 or -1, indicating player's move
-     // We record the player's move to gameBoard at the lowest available slot
+    // checkPlayerTurn() returns either 1 or -1, indicating player's move
+    // We record the player's move to gameBoard at the lowest available slot
     gameBoard[indexToUpdate[0]][indexToUpdate[1]] = checkPlayerTurn()
     // We save this cellIdx in a global variable to later be used in the render function to color red or yellow (over-written each click)
     lastColumnClicked = [indexToUpdate[0], indexToUpdate[1]]
@@ -156,10 +156,10 @@ function displayEndMessage(winner, draw) {
         } else if (winner[0] == -1) {
             highlightWinner(winner)
             return `Player 2 WINS!!`
-        } 
+        }
     } else if (draw) {
         return `DRAW! Play again?`
-    } 
+    }
 }
 
 // Called by displayEndMessage(), indicates if there is a draw or not
@@ -167,7 +167,7 @@ function checkDraw() {
     // check if we have no 0s in gameBoard AND no winner
     let checkNums = []
     // Collects all current gameBoard cell info into an array
-    for (let i = rowHeight - 1; i > -1; i--){
+    for (let i = rowHeight - 1; i > -1; i--) {
         for (let j = columnLength - 1; j > -1; j--) {
             checkNums.push(gameBoard[i][j])
         }
@@ -192,7 +192,7 @@ function checkWinner() {
                 gameBoard[i][j] + gameBoard[i][j + 1] + gameBoard[i][j + 2] + gameBoard[i][j + 3] == 4) {
                 winner = true;
                 // returns -1 or 1 to indicate winner, AND an array of Indexs to later highLightWinner()
-                return [gameBoard[i][j], `${i}${j}`, `${i}${j+1}`, `${i}${j+2}`, `${i}${j+3}`]
+                return [gameBoard[i][j], `${i}${j}`, `${i}${j + 1}`, `${i}${j + 2}`, `${i}${j + 3}`]
             }
         }
     }
@@ -203,18 +203,18 @@ function checkWinner() {
             if (gameBoard[i][j] + gameBoard[i + 1][j] + gameBoard[i + 2][j] + gameBoard[i + 3][j] == -4 ||
                 gameBoard[i][j] + gameBoard[i + 1][j] + gameBoard[i + 2][j] + gameBoard[i + 3][j] == 4) {
                 winner = true;
-                return [gameBoard[i][j], `${i}${j}`, `${i+1}${j}`, `${i+2}${j}`, `${i+3}${j}`]
+                return [gameBoard[i][j], `${i}${j}`, `${i + 1}${j}`, `${i + 2}${j}`, `${i + 3}${j}`]
             }
         }
     }
 
-    /*-----Diagonal Check (top-left to bottom-right) -----*/ 
+    /*-----Diagonal Check (top-left to bottom-right) -----*/
     for (let i = 3; i < rowHeight; i++) {
         for (let j = 0; j < columnLength - 2; j++) {
             if (gameBoard[i][j] + gameBoard[i - 1][j + 1] + gameBoard[i - 2][j + 2] + gameBoard[i - 3][j + 3] == -4 ||
                 gameBoard[i][j] + gameBoard[i - 1][j + 1] + gameBoard[i - 2][j + 2] + gameBoard[i - 3][j + 3] == 4) {
                 winner = true;
-                return [gameBoard[i][j], `${i}${j}`, `${i-1}${j+1}`, `${i-2}${j+2}`, `${i-3}${j+3}`]
+                return [gameBoard[i][j], `${i}${j}`, `${i - 1}${j + 1}`, `${i - 2}${j + 2}`, `${i - 3}${j + 3}`]
             }
         }
     }
@@ -225,7 +225,7 @@ function checkWinner() {
             if (gameBoard[i][j] + gameBoard[i + 1][j + 1] + gameBoard[i + 2][j + 2] + gameBoard[i + 3][j + 3] == -4 ||
                 gameBoard[i][j] + gameBoard[i + 1][j + 1] + gameBoard[i + 2][j + 2] + gameBoard[i + 3][j + 3] == 4) {
                 winner = true;
-                return [gameBoard[i][j], `${i}${j}`, `${i+1}${j+1}`, `${i+2}${j+2}`, `${i+3}${j+3}`];
+                return [gameBoard[i][j], `${i}${j}`, `${i + 1}${j + 1}`, `${i + 2}${j + 2}`, `${i + 3}${j + 3}`];
             }
         }
     }
@@ -265,18 +265,18 @@ function clearGameBoard() {
             cell.classList.remove('red');
             cell.classList.remove('winningHighlight')
         }
-      }
+    }
 }
 
 // Checks for available space in Column clicked,
 // Returns lowest available cell if it's not full 
 function getAvailableSlot(columnIdxClicked) {
     // Iterates through each row of the column clicked and searches for 0 (indicating empty)
-    for (let i = 5; i > -1; i--){
+    for (let i = 5; i > -1; i--) {
         if (gameBoard[i][columnIdxClicked] == 0) {
             return [i, columnIdxClicked]
         }
-    } 
+    }
     // Displays an alert if column is full
     alert(`Column full, dummy.`)
 }
@@ -293,7 +293,7 @@ function getCellIdx(cell) {
     const rowIdx = parseInt(rowClass[3]);
     const colIdx = parseInt(colClass[6]);
     return [rowIdx, colIdx];
-  };
+};
 
 // Simply returns 1 (red) if it's player 1's turn or 2 (yellow) if player 2's
 function checkPlayerTurn() {
@@ -325,11 +325,11 @@ function playMusic() {
         console.log("playing??")
         music.load()
         music.play()
-        .then(() => {
-            soundTrackPlaying = true
-        }).catch(error => {
-            console.log(error)
-        })
+            .then(() => {
+                soundTrackPlaying = true
+            }).catch(error => {
+                console.log(error)
+            })
     } else if (soundTrackPlaying == true) {
         music.pause()
         soundTrackPlaying = false
@@ -416,7 +416,7 @@ let particles = null;
 const generateParticleFormation = () => {
 
     // When GUI is adjusted, particle generation is called again so we need to remove old particle scene
-    if(particles !== null) {
+    if (particles !== null) {
         geometry.dispose()
         material.dispose()
         scene.remove(particles)
@@ -434,10 +434,9 @@ const generateParticleFormation = () => {
     const outerColor = new THREE.Color(parameters.outerColor)
     const scales = new Float32Array(parameters.count * 1)
 
-    
+
     // For each particle..
-     for(let i = 0; i < parameters.count; i++)
-     {
+    for (let i = 0; i < parameters.count; i++) {
         //Access every 3 elements in array
         const i3 = i * 3
 
@@ -448,7 +447,7 @@ const generateParticleFormation = () => {
         const forkAngle = (i % parameters.forks) / parameters.forks * Math.PI * 2
         // further the particle is from center will increase the curveAngle
         const curveAngle = radius * parameters.curve
-         
+
         // create random (x,y,z) variables to use in our GUI tweaking
         // random number = (Math.pow() takes 2 args, base ^ exponent) * (either a -1 or a positive 1) * (randomness)
         const randomX = Math.pow(Math.random(), parameters.randomPower) * (Math.random() < 0.5 ? 1 : - 1) * parameters.randomness * radius
@@ -456,38 +455,38 @@ const generateParticleFormation = () => {
         const randomZ = Math.pow(Math.random(), parameters.randomPower) * (Math.random() < 0.5 ? 1 : - 1) * parameters.randomness * radius
 
         // 
-        positions[i3    ] = Math.cos(forkAngle) * radius * -curveAngle // position on x
+        positions[i3] = Math.cos(forkAngle) * radius * -curveAngle // position on x
         positions[i3 + 1] = Math.sin(forkAngle) * 2 // position on z
         positions[i3 + 2] = Math.sin(forkAngle) * radius * curveAngle // position on z
-        
-         //
-        randomness[i3    ] = randomX
+
+        //
+        randomness[i3] = randomX
         randomness[i3 + 1] = randomY
         randomness[i3 + 2] = randomZ
-         
-         // Color
-         const mixedInnerOuter = innerColor.clone()
-         // lerp() gets the delta value from innerColor to outerColor (between 0 and 1)
-         // it then uses that delta to interpolate and mix the inner and outer color
-         mixedInnerOuter.lerp(outerColor, radius / parameters.radius)
+
+        // Color
+        const mixedInnerOuter = innerColor.clone()
+        // lerp() gets the delta value from innerColor to outerColor (between 0 and 1)
+        // it then uses that delta to interpolate and mix the inner and outer color
+        mixedInnerOuter.lerp(outerColor, radius / parameters.radius)
 
         colors[i3] = mixedInnerOuter.r
         colors[i3 + 1] = mixedInnerOuter.g
         colors[i3 + 2] = mixedInnerOuter.b
 
         // Scale
-         scales[i] = Math.random()
-     }
- 
+        scales[i] = Math.random()
+    }
+
     //Setting geometry attribute w/ BufferAttribute class which stores data (vertex, indices, colors, UVs) associated with bufferGeometry
     // We pass in an array and an integer to set the attribute
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
     geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1))
     geometry.setAttribute('aRandomness', new THREE.BufferAttribute(randomness, 3))
-    
-    
- 
+
+
+
     // Shader Material - custome program written in GLSL that runs on the GPU
     // Allows us to combine many objects into a single BufferGeometry to improve performance
     material = new THREE.ShaderMaterial({
@@ -498,11 +497,11 @@ const generateParticleFormation = () => {
         {
             uTime: { value: 0 },
             uSize: { value: 35 * renderer.getPixelRatio() }
-        },    
+        },
         vertexShader: vShader,
         fragmentShader: fShader
     })
-    
+
     // Instantiating our particles!
     particles = new THREE.Points(geometry, material)
     // Add particles to scene!
@@ -532,7 +531,7 @@ window.addEventListener('resize', () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
- 
+
 // Instantiating Camera and camera position
 //4 Args for PerspectiveCamera: (fov, Aspect Ratio, near, far) — for camera frustum (the region of space in the modeled world that may appear on the screen)
 const camera = new THREE.PerspectiveCamera(75, windowSize.width / windowSize.height, 0.1, 100)
@@ -552,7 +551,7 @@ particleParameters.close();
 particleParameters.add(parameters, 'count').min(100).max(1000000).step(100).onFinishChange(generateParticleFormation);
 particleParameters.add(parameters, 'radius').min(0.01).max(22).step(0.01).onFinishChange(generateParticleFormation);
 particleParameters.add(parameters, 'curve').min(- 5).max(5).step(0.001).onFinishChange(generateParticleFormation);
-particleParameters.add(parameters, 'forks').min( 1).max(20).step(1.0).onFinishChange(generateParticleFormation);
+particleParameters.add(parameters, 'forks').min(1).max(20).step(1.0).onFinishChange(generateParticleFormation);
 particleParameters.add(parameters, 'randomness').min(0).max(10).step(0.001).onFinishChange(generateParticleFormation);
 particleParameters.add(parameters, 'randomPower').min(1).max(10).step(0.001).onFinishChange(generateParticleFormation);
 particleParameters.addColor(parameters, 'innerColor').onFinishChange(generateParticleFormation)
@@ -580,8 +579,7 @@ generateParticleFormation()
 // Object for keeping track of time to use in frame updates
 const clock = new THREE.Clock()
 // Updates objects every frame...
-const frame = () =>
-{
+const frame = () => {
     const elapsedTime = clock.getElapsedTime()
 
     // Update material
@@ -597,4 +595,4 @@ const frame = () =>
     window.requestAnimationFrame(frame)
 
 }
-    frame()
+frame()
