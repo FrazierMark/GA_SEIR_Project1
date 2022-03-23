@@ -35,9 +35,9 @@ const column6 = document.getElementsByClassName('column6')
 
 const allColumns = [column0, column1, column2, column3, column4, column5, column6]
 
-/*----- Variables -----*/
+/*----- State Variables -----*/
 let gameBoard = [];
-// 2D Matrizx - 6 x 7
+// 2D Matrix - 6 x 7, after init() gameBoard filled with 0s to represent empty/blank cells
 // [
 //     [0,0,0,0,0,0,0] = gameBoard[0]
 //     [0,0,0,0,0,0,0] = gameBoard[1]
@@ -80,6 +80,7 @@ drawSound.volume = 0.5
 startResetBtn.addEventListener('click', init);
 musicBtn.addEventListener('click', playMusic);
 
+// Adds eventListener on each cell
 for (const column of allColumns) {
     for (const cell of column) {
       cell.addEventListener('click', dropToken);
@@ -87,10 +88,10 @@ for (const column of allColumns) {
   }
 
 
-// Set initial state variables 
+// Sets initial state variables 
 function init(e) {
     startResetBtn.innerText = 'Restart Game?'
-    
+    // If another game just ended, this clears the board
     clearGameBoard()
 
     // Initialize 2D matrix of (0)s
@@ -100,20 +101,27 @@ function init(e) {
 }
 
 
-//aka handleClick
+//aka handleClick, fires when a column/cell is clicked
 function dropToken(e) {
+    // Gets specific clicked cell (an array of [Row, Column])
     const cellIdx = getCellIdx(e)
+    // Gets Column index from that array
     const columnIdxClicked = cellIdx[1]
-    let indexToUpdate = getAvailableSlot(columnIdxClicked) // returns Index of available slot
-    gameBoard[indexToUpdate[0]][indexToUpdate[1]] = checkPlayerTurn() // returns either 1 or 2 for player move
-    // record to gameBoard players move
+    // Returns an Index of lowest available slot if any
+    let indexToUpdate = getAvailableSlot(columnIdxClicked)
+     // checkPlayerTurn() returns either 1 or -1, indicating player's move
+     // We record the player's move to gameBoard at the lowest available slot
+    gameBoard[indexToUpdate[0]][indexToUpdate[1]] = checkPlayerTurn()
+    // We save this cellIdx in a global variable to later be used in the render function to color red or yellow (over-written each click)
     lastColumnClicked = [indexToUpdate[0], indexToUpdate[1]]
     render()
 }
 
 function render() {
+    //Colors each cell based on player's move
     updateDomGameBoard()
     updateTurn()
+    //Renders a display message if there's a Winner or a Draw
     winLoseDrawMsg.innerText = displayEndMessage(checkWinner(), checkDraw())
     if (winner == true || draw == true) {
         winLoseDrawMsg.classList.remove('endGameMsgDisable')
@@ -124,21 +132,25 @@ function render() {
 
 
 function updateDomGameBoard() {
-    // check to find cells with class List containing appropriate row AND column
+    // We construct the classNames of approprite Idx from the lastColumnClicked
     let classNames = [`row${lastColumnClicked[0]}`, `column${lastColumnClicked[1]}`]
+    // We use those 2 classNames to grab the correct DOM element/cell 
     let cellToColor = document.getElementsByClassName(`${classNames[0]} ${classNames[1]}`)
+    // Color that cell based on player's turn
     if (player1_Turn) {
         cellToColor[0].classList.add('red')
     } else {
         cellToColor[0].classList.add('yellow')
     }
+    // Play Sci-fi sound on color change
     playSoundFX()
 }
 
-
+// Takes 2 functions as arguments, functions indicate winner or draw
 function displayEndMessage(winner, draw) {
     if (winner) {
         if (winner[0] == 1) {
+            //Highlights winning 4 cells in blue if there is a winner
             highlightWinner(winner)
             return `Player 1 WINS!!`
         } else if (winner[0] == -1) {
@@ -150,11 +162,11 @@ function displayEndMessage(winner, draw) {
     } 
 }
 
-
+// Called by displayEndMessage(), indicates if there is a draw or not
 function checkDraw() {
-    // check if we have no 0s in gameBoard && no winner
+    // check if we have no 0s in gameBoard AND no winner
     let checkNums = []
-
+    // Collects all current gameBoard cell info into an array
     for (let i = rowHeight - 1; i > -1; i--){
         for (let j = columnLength - 1; j > -1; j--) {
             checkNums.push(gameBoard[i][j])
@@ -168,21 +180,24 @@ function checkDraw() {
     }
 }
 
-
+// Called by displayEndMessage(), indicates if there is a winner by finding 4 identical cells in a row
 function checkWinner() {
-    // check horizontallly all rows 
+    /*-----Horizontal Check-----*/
+    // Check every single row...
     for (let i = 0; i < rowHeight; i++) {
+        // Then check the first 4 cells in the row (no need to check past column 4 cause grid is not that large)
         for (let j = 0; j < columnLength - 3; j++) {
+            // If four sequential cells add up to either -4 (player 2) or 4 (player 1), we have a winner
             if (gameBoard[i][j] + gameBoard[i][j + 1] + gameBoard[i][j + 2] + gameBoard[i][j + 3] == -4 ||
                 gameBoard[i][j] + gameBoard[i][j + 1] + gameBoard[i][j + 2] + gameBoard[i][j + 3] == 4) {
                 winner = true;
-                // returns 1 or 2 for winner, AND an array of coordinates to later highlightWinner()
+                // returns -1 or 1 to indicate winner, AND an array of Indexs to later highLightWinner()
                 return [gameBoard[i][j], `${i}${j}`, `${i}${j+1}`, `${i}${j+2}`, `${i}${j+3}`]
             }
         }
     }
 
-    // check vertical all columns
+    /*-----Vertical Check-----*/
     for (let i = 0; i < rowHeight - 3; i++) {
         for (let j = 0; j < columnLength; j++) {
             if (gameBoard[i][j] + gameBoard[i + 1][j] + gameBoard[i + 2][j] + gameBoard[i + 3][j] == -4 ||
@@ -193,7 +208,7 @@ function checkWinner() {
         }
     }
 
-    // check diagonal, top-left to bottom-right 
+    /*-----Diagonal Check (top-left to bottom-right) -----*/ 
     for (let i = 3; i < rowHeight; i++) {
         for (let j = 0; j < columnLength - 2; j++) {
             if (gameBoard[i][j] + gameBoard[i - 1][j + 1] + gameBoard[i - 2][j + 2] + gameBoard[i - 3][j + 3] == -4 ||
@@ -204,7 +219,7 @@ function checkWinner() {
         }
     }
 
-    // check diagonal, top-right to bottom-left
+    /*-----Diagonal Check (top-right to bottom-left) -----*/
     for (let i = 0; i < rowHeight - 3; i++) {
         for (let j = 0; j < columnLength - 2; j++) {
             if (gameBoard[i][j] + gameBoard[i + 1][j + 1] + gameBoard[i + 2][j + 2] + gameBoard[i + 3][j + 3] == -4 ||
@@ -217,13 +232,16 @@ function checkWinner() {
 
 }
 
-
+// Accepts an array of winning Indexs from checkWinner()
 function highlightWinner(winningFour) {
-    //remove 1st element (winning player num)
+    // We remove 1st element (not needed)
     winningFour.shift()
+    // We get the classNames of the winning cells
     winningFour.forEach(cell => {
-        let winningCellClassNames = [`row${cell[0]}`, `column${cell[1]}`]  
+        let winningCellClassNames = [`row${cell[0]}`, `column${cell[1]}`]
+        // We grab the correct DOM cell based on those classes
         let cellToHighlight = document.getElementsByClassName(`${winningCellClassNames[0]} ${winningCellClassNames[1]} `)
+        // We highlight winning cells by adding a css class
         cellToHighlight[0].classList.add('winningHighlight')
     })
 }
@@ -338,8 +356,7 @@ function playSoundFX() {
             }).catch(error => {
                 console.log(error)
             })
-    }
-    else if (draw == true) {
+    } else if (draw == true) {
         drawSound.load()
         drawSound.play()
             .then(() => {
@@ -382,7 +399,7 @@ const particleTexture = textureLoader.load('/textures/particles/2.png')
 
 //Particle parameters
 const parameters = {
-    count: 100000,
+    count: 13500,
     size: 0.022,
     radius: 5,
     forks: 13,
@@ -516,7 +533,7 @@ window.addEventListener('resize', () => {
 const camera = new THREE.PerspectiveCamera(75, windowSize.width / windowSize.height, 0.1, 100)
 camera.position.x = 0
 camera.position.y = 0
-camera.position.z = 4.517
+camera.position.z = 0.897
 scene.add(camera)
 
 // Controls
