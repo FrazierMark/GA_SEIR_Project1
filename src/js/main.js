@@ -377,10 +377,6 @@ function playSoundFX() {
 
 
 
-
-
-
-
 /*
  * WebGL / ThreeJS - Background Animation
  */
@@ -400,7 +396,7 @@ const scene = new THREE.Scene()
 
 // Initial Particle parameter data on page load
 const parameters = {
-    count: 13500,
+    count: 10500,
     size: 0.022,
     radius: 5,
     forks: 13,
@@ -500,8 +496,8 @@ const generateParticleFormation = () => {
         vertexColors: true,
         uniforms:
         {
-            uTime: { value: -100 },
-            uSize: { value: 20 * renderer.getPixelRatio() }
+            uTime: { value: 0 },
+            uSize: { value: 35 * renderer.getPixelRatio() }
         },    
         vertexShader: vShader,
         fragmentShader: fShader
