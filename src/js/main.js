@@ -10,12 +10,10 @@ import yellowTrack from '../../public/audio/yellowTrack.mp3';
 import winTone from '../../public/audio/winTone.mp3';
 import drawTone from '../../public/audio/drawTone.mp3';
 
-
 // Calls init() on load
 document.addEventListener('DOMContentLoaded', function () {
     init();
 }, false);
-
 
 /*----- DOM Elements -----*/
 const player1_TurnToken = document.querySelector(".player1_token")
@@ -34,6 +32,7 @@ const column5 = document.getElementsByClassName('column5')
 const column6 = document.getElementsByClassName('column6')
 
 const allColumns = [column0, column1, column2, column3, column4, column5, column6]
+
 
 /*----- State Variables -----*/
 let gameBoard = [];
@@ -87,7 +86,6 @@ for (const column of allColumns) {
     }
 }
 
-
 // Sets initial state variables 
 function init(e) {
     startResetBtn.innerText = 'Restart Game?'
@@ -99,7 +97,6 @@ function init(e) {
         gameBoard.push(new Array(7).fill(0))
     }
 }
-
 
 //aka handleClick, fires when a column/cell is clicked
 function dropToken(e) {
@@ -129,7 +126,6 @@ function render() {
         startResetBtn.innerText = `Play again?`
     }
 }
-
 
 function updateDomGameBoard() {
     // We construct the classNames of approprite Idx from the lastColumnClicked
@@ -372,8 +368,6 @@ function playSoundFX() {
             })
     }
 }
-
-
 
 
 
