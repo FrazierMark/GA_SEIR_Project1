@@ -2,7 +2,7 @@
 
 ## GA - SERI - Project 1
  
-## This is a javascript recreation of the classic game, "Connect 4" with a an updated look.
+## This is a javascript recreation of the classic game, "Connect 4" with an updated look.
 - The is a two-player game in which players (yellow and red) take turns
 dropping tokens into a 6-row, 7-column grid.
 - Tokens drop to the lowest available position within the column
@@ -24,5 +24,11 @@ with their (yellow or red) tokens, wins!
 * NodeJS
 * NPM
 
-## Live Game Link
+## Getting Started & Live Game Link
 https://fraziermark.github.io/GA_SEIR_Project1/
+
+## Next Steps
+* Cache the player's moves in a hashmap so the checkWinner function has a better time complexity 
+* Implement a 1-player option that challenges a computer based on difficulty level
+* Animate token dropping onClick
+ 
