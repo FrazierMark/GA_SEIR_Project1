@@ -25,7 +25,16 @@ with their (yellow or red) tokens, wins!
 * NPM
 
 ## Getting Started & Live Game Link
-https://fraziermark.github.io/GA_SEIR_Project1/
+* https://fraziermark.github.io/GA_SEIR_Project1/
+
+ 
+#### To run locally, clone the repository and open the project in your editor
+* In the project directory, you can run:
+#### 'npm install'
+* Installs node modules
+#### 'npm start'
+* Runs the app in development mode on http://localhost:8080
+* The page should reload on edits
 
 ## Next Steps
 * Cache the player's moves in a hashmap so the checkWinner function has a better time complexity 
